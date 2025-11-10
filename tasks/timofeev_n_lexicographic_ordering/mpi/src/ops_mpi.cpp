@@ -47,18 +47,35 @@ bool TimofeevNLexicographicOrderingMPI::RunImpl() {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
   if (rank == 0) {
+    GetOutput().first = 1;
     // only true if comparison is true on every step
     for (int i = 0; i < (int)input.first.length() - 1; i++) {
       GetOutput().first &= input.first[i] < input.first[i + 1];
     }
-  } else {
+  } else if (rank == 1) {
+    GetOutput().second = 1;
     for (int i = 0; i < (int)input.second.length() - 1; i++) {
       GetOutput().second &= input.second[i] < input.second[i + 1];
     }
   }
 
+  if (rank == 1) {
+    MPI_Send(&GetOutput().second, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+  }
+  if (rank == 0) {
+    MPI_Recv(&GetOutput().second, 1, MPI_INT, 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Send(&GetOutput().first, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+  }
+  if (rank == 1) {
+    MPI_Recv(&GetOutput().first, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  }
+
   MPI_Barrier(MPI_COMM_WORLD);
-  return GetOutput().first >= 0 && GetOutput().second >= 0;
+  if (rank > 1) {
+    return 0;
+  }
+  //std::cout <<'\n' << '\n' << rank << GetOutput().first << GetOutput().second << '\n';
+  return 1;//GetOutput().first == 1 && GetOutput().second == 1; //(GetOutput().first != 1 || rank != 0) && (rank != 1 || GetOutput().second != 1)
 }
 
 bool TimofeevNLexicographicOrderingMPI::PostProcessingImpl() {

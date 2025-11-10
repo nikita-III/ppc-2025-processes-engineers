@@ -23,7 +23,7 @@ namespace timofeev_n_lexicographic_ordering {
 class TimofeevNRunFuncTestsLexicographic : public ppc::util::BaseRunFuncTests<InType, OutType, TestType> {
  public:
   static std::string PrintTestParam(const TestType &test_param) {
-    return std::get<1>(test_param).first + " " + std::get<1>(test_param).second + " " + std::get<2>(test_param);
+    return std::get<1>(test_param).first + "_" + std::get<1>(test_param).second + "_" + std::get<2>(test_param);
   }
 
  protected:
@@ -52,10 +52,10 @@ TEST_P(TimofeevNRunFuncTestsLexicographic, StringSortedTest) {
   ExecuteTest(GetParam());
 }
 
-const std::array<TestType, 4> kTestParam = {std::make_tuple(std::make_pair(1, 1), std::make_pair("abcd", "abcd"), "sorted sorted"),
-                                            std::make_tuple(std::make_pair(1, 0), std::make_pair("abcd", "abdc"), "sorted unsorted"),
-                                            std::make_tuple(std::make_pair(0, 1), std::make_pair("abdc", "abcd"), "unsorted sorted"),
-                                            std::make_tuple(std::make_pair(0, 0), std::make_pair("abdc", "abdc"), "unsorted unsorted")};
+const std::array<TestType, 4> kTestParam = {std::make_tuple(std::make_pair(1, 1), std::make_pair("abcd", "abcd"), "sorted1sorted1"),
+                                            std::make_tuple(std::make_pair(1, 0), std::make_pair("abcd", "abdc"), "sorted1unsorted0"),
+                                            std::make_tuple(std::make_pair(0, 1), std::make_pair("abdc", "abcd"), "unsorted0sorted1"),
+                                            std::make_tuple(std::make_pair(0, 0), std::make_pair("abdc", "abdc"), "unsorted0unsorted0")};
 
 const auto kTestTasksList =
     std::tuple_cat(ppc::util::AddFuncTask<TimofeevNLexicographicOrderingMPI, InType>(kTestParam, PPC_SETTINGS_timofeev_n_lexicographic_ordering),
