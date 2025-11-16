@@ -11,9 +11,9 @@
 namespace timofeev_n_lexicographic_ordering {
 
 TimofeevNLexicographicOrderingMPI::TimofeevNLexicographicOrderingMPI(const InType &in) {
-   SetTypeOfTask(GetStaticTypeOfTask());
-   GetInput() = in;
-   GetOutput() = std::pair<int, int>(1, 1);
+  SetTypeOfTask(GetStaticTypeOfTask());
+  GetInput() = in;
+  GetOutput() = std::pair<int, int>(1, 1);
 }
 
 bool TimofeevNLexicographicOrderingMPI::ValidationImpl() {
@@ -28,8 +28,6 @@ bool TimofeevNLexicographicOrderingMPI::Compare(char a, char b) {
   return a < b;
 }
 
-
-
 // bool MCoompare(char a, char b) {
 //   return a < b;
 // }
@@ -39,9 +37,6 @@ bool TimofeevNLexicographicOrderingMPI::RunImpl() {
   if (input.first.length() < 1 || input.second.length() < 1) {
     return false;
   }
-
-  
-
 
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -74,8 +69,9 @@ bool TimofeevNLexicographicOrderingMPI::RunImpl() {
   if (rank > 1) {
     return 0;
   }
-  //std::cout <<'\n' << '\n' << rank << GetOutput().first << GetOutput().second << '\n';
-  return 1;//GetOutput().first == 1 && GetOutput().second == 1; //(GetOutput().first != 1 || rank != 0) && (rank != 1 || GetOutput().second != 1)
+  // std::cout <<'\n' << '\n' << rank << GetOutput().first << GetOutput().second << '\n';
+  return 1;  // GetOutput().first == 1 && GetOutput().second == 1; //(GetOutput().first != 1 || rank != 0) && (rank != 1
+             // || GetOutput().second != 1)
 }
 
 bool TimofeevNLexicographicOrderingMPI::PostProcessingImpl() {
@@ -83,4 +79,4 @@ bool TimofeevNLexicographicOrderingMPI::PostProcessingImpl() {
   return 1;
 }
 
-}
+}  // namespace timofeev_n_lexicographic_ordering

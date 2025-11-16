@@ -52,14 +52,16 @@ TEST_P(TimofeevNRunFuncTestsLexicographic, StringSortedTest) {
   ExecuteTest(GetParam());
 }
 
-const std::array<TestType, 4> kTestParam = {std::make_tuple(std::make_pair(1, 1), std::make_pair("abcd", "abcd"), "sorted1sorted1"),
-                                            std::make_tuple(std::make_pair(1, 0), std::make_pair("abcd", "abdc"), "sorted1unsorted0"),
-                                            std::make_tuple(std::make_pair(0, 1), std::make_pair("abdc", "abcd"), "unsorted0sorted1"),
-                                            std::make_tuple(std::make_pair(0, 0), std::make_pair("abdc", "abdc"), "unsorted0unsorted0")};
+const std::array<TestType, 4> kTestParam = {
+    std::make_tuple(std::make_pair(1, 1), std::make_pair("abcd", "abcd"), "sorted1sorted1"),
+    std::make_tuple(std::make_pair(1, 0), std::make_pair("abcd", "abdc"), "sorted1unsorted0"),
+    std::make_tuple(std::make_pair(0, 1), std::make_pair("abdc", "abcd"), "unsorted0sorted1"),
+    std::make_tuple(std::make_pair(0, 0), std::make_pair("abdc", "abdc"), "unsorted0unsorted0")};
 
-const auto kTestTasksList =
-    std::tuple_cat(ppc::util::AddFuncTask<TimofeevNLexicographicOrderingMPI, InType>(kTestParam, PPC_SETTINGS_timofeev_n_lexicographic_ordering),
-                   ppc::util::AddFuncTask<TimofeevNLexicographicOrderingSEQ, InType>(kTestParam, PPC_SETTINGS_timofeev_n_lexicographic_ordering));
+const auto kTestTasksList = std::tuple_cat(ppc::util::AddFuncTask<TimofeevNLexicographicOrderingMPI, InType>(
+                                               kTestParam, PPC_SETTINGS_timofeev_n_lexicographic_ordering),
+                                           ppc::util::AddFuncTask<TimofeevNLexicographicOrderingSEQ, InType>(
+                                               kTestParam, PPC_SETTINGS_timofeev_n_lexicographic_ordering));
 
 const auto kGtestValues = ppc::util::ExpandToValues(kTestTasksList);
 
@@ -67,6 +69,6 @@ const auto kPerfTestName = TimofeevNRunFuncTestsLexicographic::PrintFuncTestName
 
 INSTANTIATE_TEST_SUITE_P(StringSortedTests, TimofeevNRunFuncTestsLexicographic, kGtestValues, kPerfTestName);
 
-} 
+}  // namespace
 
-} 
+}  // namespace timofeev_n_lexicographic_ordering

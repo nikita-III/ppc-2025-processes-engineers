@@ -1,7 +1,7 @@
 #pragma once
 
-#include "timofeev_n_lexicographic_ordering/common/include/common.hpp"
 #include "task/include/task.hpp"
+#include "timofeev_n_lexicographic_ordering/common/include/common.hpp"
 
 namespace timofeev_n_lexicographic_ordering {
 
@@ -20,4 +20,4 @@ class TimofeevNLexicographicOrderingSEQ : public BaseTask {
   bool Compare(char a, char b);
 };
 
-}  // namespace nesterov_a_test_task_processes
+}  // namespace timofeev_n_lexicographic_ordering

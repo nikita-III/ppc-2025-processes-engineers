@@ -8,10 +8,10 @@
 namespace timofeev_n_lexicographic_ordering {
 
 class LexicographicRunPerfTestProcesses : public ppc::util::BaseRunPerfTests<InType, OutType> {
-  //const int kCount_ = 100;
+  // const int kCount_ = 100;
   InType input_data_{};
   OutType expected_data_;
-  // 
+  //
   void SetUp() override {
     std::string sPerf = "";
     for (int i = 0; i < 500000; i++) {
@@ -35,7 +35,8 @@ TEST_P(LexicographicRunPerfTestProcesses, RunPerfModes) {
 }
 
 const auto kAllPerfTasks =
-    ppc::util::MakeAllPerfTasks<InType, TimofeevNLexicographicOrderingMPI, TimofeevNLexicographicOrderingSEQ>(PPC_SETTINGS_timofeev_n_lexicographic_ordering);
+    ppc::util::MakeAllPerfTasks<InType, TimofeevNLexicographicOrderingMPI, TimofeevNLexicographicOrderingSEQ>(
+        PPC_SETTINGS_timofeev_n_lexicographic_ordering);
 
 const auto kGtestValues = ppc::util::TupleToGTestValues(kAllPerfTasks);
 
@@ -43,4 +44,4 @@ const auto kPerfTestName = LexicographicRunPerfTestProcesses::CustomPerfTestName
 
 INSTANTIATE_TEST_SUITE_P(RunModeTests, LexicographicRunPerfTestProcesses, kGtestValues, kPerfTestName);
 
-}
+}  // namespace timofeev_n_lexicographic_ordering

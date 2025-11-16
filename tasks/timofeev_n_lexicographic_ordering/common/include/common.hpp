@@ -13,4 +13,4 @@ using OutType = std::pair<int, int>;
 using TestType = std::tuple<std::pair<int, int>, std::pair<std::string, std::string>, std::string>;
 using BaseTask = ppc::task::Task<InType, OutType>;
 
-}
+}  // namespace timofeev_n_lexicographic_ordering

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "timofeev_n_lexicographic_ordering/common/include/common.hpp"
 #include "task/include/task.hpp"
+#include "timofeev_n_lexicographic_ordering/common/include/common.hpp"
 
 namespace timofeev_n_lexicographic_ordering {
 
@@ -20,4 +20,4 @@ class TimofeevNLexicographicOrderingMPI : public BaseTask {
   bool Compare(char a, char b);
 };
 
-}
+}  // namespace timofeev_n_lexicographic_ordering

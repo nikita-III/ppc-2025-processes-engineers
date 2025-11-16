@@ -51,4 +51,4 @@ bool TimofeevNLexicographicOrderingSEQ::PostProcessingImpl() {
   return 1;
 }
 
-}
+}  // namespace timofeev_n_lexicographic_ordering
