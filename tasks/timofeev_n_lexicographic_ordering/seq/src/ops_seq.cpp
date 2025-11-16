@@ -15,26 +15,15 @@ TimofeevNLexicographicOrderingSEQ::TimofeevNLexicographicOrderingSEQ(const InTyp
 }
 
 bool TimofeevNLexicographicOrderingSEQ::ValidationImpl() {
-  return (GetInput().first != "") && (GetInput().second != "");
+  return 1;
 }
 
 bool TimofeevNLexicographicOrderingSEQ::PreProcessingImpl() {
   return 1;
 }
 
-bool TimofeevNLexicographicOrderingSEQ::Compare(char a, char b) {
-  return a < b;
-}
-
-// bool SCoompare(char a, char b) {
-//   return a < b;
-// }
-
 bool TimofeevNLexicographicOrderingSEQ::RunImpl() {
   auto input = GetInput();
-  if (input.first.length() < 1 || input.second.length() < 1) {
-    return false;
-  }
 
   // only true if comparison is true on every step
   for (int i = 0; i < (int)input.first.length() - 1; i++) {
@@ -44,7 +33,7 @@ bool TimofeevNLexicographicOrderingSEQ::RunImpl() {
     GetOutput().second &= input.second[i] <= input.second[i + 1];
   }
 
-  return GetOutput().first >= 0 && GetOutput().second >= 0;
+  return 1;
 }
 
 bool TimofeevNLexicographicOrderingSEQ::PostProcessingImpl() {

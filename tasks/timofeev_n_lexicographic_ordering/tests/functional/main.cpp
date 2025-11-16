@@ -52,11 +52,15 @@ TEST_P(TimofeevNRunFuncTestsLexicographic, StringSortedTest) {
   ExecuteTest(GetParam());
 }
 
-const std::array<TestType, 4> kTestParam = {
+const std::array<TestType, 7> kTestParam = {
     std::make_tuple(std::make_pair(1, 1), std::make_pair("abcd", "abcd"), "sorted1sorted1"),
     std::make_tuple(std::make_pair(1, 0), std::make_pair("abcd", "abdc"), "sorted1unsorted0"),
     std::make_tuple(std::make_pair(0, 1), std::make_pair("abdc", "abcd"), "unsorted0sorted1"),
-    std::make_tuple(std::make_pair(0, 0), std::make_pair("abdc", "abdc"), "unsorted0unsorted0")};
+    std::make_tuple(std::make_pair(0, 0), std::make_pair("abdc", "abdc"), "unsorted0unsorted0"),
+    std::make_tuple(std::make_pair(1, 1), std::make_pair("", "abcd"), "empty1sorted1"),
+    std::make_tuple(std::make_pair(0, 1), std::make_pair("abdc", ""), "unsorted0empty1"),
+    std::make_tuple(std::make_pair(1, 1), std::make_pair("", ""), "empty1empty1")
+  };
 
 const auto kTestTasksList = std::tuple_cat(ppc::util::AddFuncTask<TimofeevNLexicographicOrderingMPI, InType>(
                                                kTestParam, PPC_SETTINGS_timofeev_n_lexicographic_ordering),

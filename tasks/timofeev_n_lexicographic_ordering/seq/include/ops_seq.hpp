@@ -17,7 +17,6 @@ class TimofeevNLexicographicOrderingSEQ : public BaseTask {
   bool PreProcessingImpl() override;
   bool RunImpl() override;
   bool PostProcessingImpl() override;
-  bool Compare(char a, char b);
 };
 
 }  // namespace timofeev_n_lexicographic_ordering
