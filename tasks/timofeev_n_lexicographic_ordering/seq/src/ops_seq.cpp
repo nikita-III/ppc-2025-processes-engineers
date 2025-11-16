@@ -38,10 +38,10 @@ bool TimofeevNLexicographicOrderingSEQ::RunImpl() {
 
   // only true if comparison is true on every step
   for (int i = 0; i < (int)input.first.length() - 1; i++) {
-    GetOutput().first &= input.first[i] < input.first[i + 1];
+    GetOutput().first &= input.first[i] <= input.first[i + 1];
   }
   for (int i = 0; i < (int)input.second.length() - 1; i++) {
-    GetOutput().second &= input.second[i] < input.second[i + 1];
+    GetOutput().second &= input.second[i] <= input.second[i + 1];
   }
 
   return GetOutput().first >= 0 && GetOutput().second >= 0;

@@ -11,11 +11,14 @@ class LexicographicRunPerfTestProcesses : public ppc::util::BaseRunPerfTests<InT
   //const int kCount_ = 100;
   InType input_data_{};
   OutType expected_data_;
-
+  // 
   void SetUp() override {
-    std::string sPerf;
-    for (char i = 'a'; i <= 'z'; i++) {
-      sPerf += i;
+    std::string sPerf = "";
+    // for (char i = ' '; i <= 'z'; i++) {
+    //   sPerf += i;
+    // }
+    for (int i = 0; i < 500000; i++) {
+      sPerf += 'a';
     }
     input_data_ = std::make_pair(sPerf, sPerf);
     expected_data_ = std::make_pair(1, 1);
