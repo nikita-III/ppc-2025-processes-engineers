@@ -1,16 +1,11 @@
 #include <gtest/gtest.h>
 #include <stb/stb_image.h>
 
-#include <algorithm>
 #include <array>
 #include <cstddef>
-#include <cstdint>
-#include <numeric>
-#include <stdexcept>
 #include <string>
 #include <tuple>
 #include <utility>
-#include <vector>
 
 #include "timofeev_n_lexicographic_ordering/common/include/common.hpp"
 #include "timofeev_n_lexicographic_ordering/mpi/include/ops_mpi.hpp"

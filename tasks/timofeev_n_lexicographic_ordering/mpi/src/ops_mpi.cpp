@@ -2,8 +2,6 @@
 
 #include <mpi.h>
 
-#include <numeric>
-#include <vector>
 
 #include "timofeev_n_lexicographic_ordering/common/include/common.hpp"
 #include "util/include/util.hpp"
@@ -17,11 +15,11 @@ TimofeevNLexicographicOrderingMPI::TimofeevNLexicographicOrderingMPI(const InTyp
 }
 
 bool TimofeevNLexicographicOrderingMPI::ValidationImpl() {
-  return 1;
+  return true;
 }
 
 bool TimofeevNLexicographicOrderingMPI::PreProcessingImpl() {
-  return 1;
+  return true;
 }
 
 bool TimofeevNLexicographicOrderingMPI::RunImpl() {
@@ -33,12 +31,12 @@ bool TimofeevNLexicographicOrderingMPI::RunImpl() {
 
   if (rank == 0) {
     // only true if comparison is true on every step
-    for (int i = 0; i < (int)input.first.length() - 1; i++) {
-      GetOutput().first &= input.first[i] <= input.first[i + 1];
+    for (size_t i = 0; i < input.first.length() - 1; i++) {
+      GetOutput().first &= static_cast<int>(input.first[i] <= input.first[i + 1]);
     }
   } else if (rank == 1) {
-    for (int i = 0; i < (int)input.second.length() - 1; i++) {
-      GetOutput().second &= input.second[i] <= input.second[i + 1];
+    for (size_t i = 0; i < input.second.length() - 1; i++) {
+      GetOutput().second &= static_cast<int>(input.second[i] <= input.second[i + 1]);
     }
   }
 
@@ -46,12 +44,12 @@ bool TimofeevNLexicographicOrderingMPI::RunImpl() {
   MPI_Bcast(&GetOutput().second, 1, MPI_INT, 1, MPI_COMM_WORLD);
 
   MPI_Barrier(MPI_COMM_WORLD);
-  return 1;
+  return true;
 }
 
 bool TimofeevNLexicographicOrderingMPI::PostProcessingImpl() {
   // idk what else to put there
-  return 1;
+  return true;
 }
 
 }  // namespace timofeev_n_lexicographic_ordering

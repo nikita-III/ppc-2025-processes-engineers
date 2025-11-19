@@ -5,19 +5,21 @@
 #include "timofeev_n_lexicographic_ordering/seq/include/ops_seq.hpp"
 #include "util/include/perf_test_util.hpp"
 
+#include <string>
+#include <utility>
+
 namespace timofeev_n_lexicographic_ordering {
 
 class LexicographicRunPerfTestProcesses : public ppc::util::BaseRunPerfTests<InType, OutType> {
   // const int kCount_ = 100;
-  InType input_data_{};
   OutType expected_data_;
   //
   void SetUp() override {
-    std::string sPerf = "";
+    std::string s_perf = "";
     for (int i = 0; i < 500000; i++) {
-      sPerf += 'a';
+      s_perf += 'a';
     }
-    input_data_ = std::make_pair(sPerf, sPerf);
+    InType input_data_ = std::make_pair(s_perf, s_perf);
     expected_data_ = std::make_pair(1, 1);
   }
 

@@ -1,10 +1,8 @@
 #include "timofeev_n_lexicographic_ordering/seq/include/ops_seq.hpp"
 
-#include <numeric>
-#include <vector>
-
 #include "timofeev_n_lexicographic_ordering/common/include/common.hpp"
-#include "util/include/util.hpp"
+
+#include <utility>
 
 namespace timofeev_n_lexicographic_ordering {
 
@@ -15,29 +13,29 @@ TimofeevNLexicographicOrderingSEQ::TimofeevNLexicographicOrderingSEQ(const InTyp
 }
 
 bool TimofeevNLexicographicOrderingSEQ::ValidationImpl() {
-  return 1;
+  return true;
 }
 
 bool TimofeevNLexicographicOrderingSEQ::PreProcessingImpl() {
-  return 1;
+  return true;
 }
 
 bool TimofeevNLexicographicOrderingSEQ::RunImpl() {
   auto input = GetInput();
 
   // only true if comparison is true on every step
-  for (int i = 0; i < (int)input.first.length() - 1; i++) {
-    GetOutput().first &= input.first[i] <= input.first[i + 1];
+  for (size_t i = 0; i < input.first.length() - 1; i++) {
+    GetOutput().first &= static_cast<int>(input.first[i] <= input.first[i + 1]);
   }
-  for (int i = 0; i < (int)input.second.length() - 1; i++) {
-    GetOutput().second &= input.second[i] <= input.second[i + 1];
+  for (size_t i = 0; i < input.second.length() - 1; i++) {
+    GetOutput().second &= static_cast<int>(input.second[i] <= input.second[i + 1]);
   }
 
-  return 1;
+  return true;
 }
 
 bool TimofeevNLexicographicOrderingSEQ::PostProcessingImpl() {
-  return 1;
+  return true;
 }
 
 }  // namespace timofeev_n_lexicographic_ordering
