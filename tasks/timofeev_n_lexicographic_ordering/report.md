@@ -17,14 +17,15 @@
 ```cpp
 auto input = GetInput();
 
-for (int i = 0; i < (int)input.first.length() - 1; i++) {
-GetOutput().first &= input.first[i] <= input.first[i + 1];
+// only true if comparison is true on every step
+for (size_t i = 0; !input.first.empty() && i < input.first.length() - 1; i++) {
+  GetOutput().first &= static_cast<int>(input.first[i] <= input.first[i + 1]);
 }
-for (int i = 0; i < (int)input.second.length() - 1; i++) {
-GetOutput().second &= input.second[i] <= input.second[i + 1];
+for (size_t i = 0; !input.second.empty() && i < input.second.length() - 1; i++) {
+  GetOutput().second &= static_cast<int>(input.second[i] <= input.second[i + 1]);
 }
 
-return 1;
+return true;
 ```
 
 ## 4. Схема распараллеливания
@@ -34,11 +35,10 @@ return 1;
 - Структура кода:
 Есть классы ```TimofeevNLexicographicOrderingMPI``` и ```TimofeevNLexicographicOrderingSEQ```, там функция ```bool RunImpl()```. В функции для последовательного исполнения написан вышеприведённый код (раздел 3. Базовый алгоритм (Последовательный)). Код для функции параллельного исполнения приведён в Приложении 1.
 - Реализация предполагает, что пустая строка является упорядоченной
-- Реализация предполагает, что программа с использованием MPI запускается не менее, чем с двумя процессами (иначе применять многопроцессность бессмысленно)
 
 ## 6. Экспериментальная установка
 - Аппаратное обеспечение / ОС: Intel(R) Core(TM) i7-3770, 8 ядер / 1 поток на ядро, 23.4 ГиБ ОЗУ, ОС: кубунту 24.04
-- Инструментальная цепочка: gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0, тип сборки: Release
+- Инструментальная цепочка: gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0, clang-tidy-21, clang-format-21, тип сборки: Release
 - Данные: тестовые данные для функциональных тестов находятся в файле tests/functional/main.cpp в виде списка типа ``` std::array<TestType, 7>```, тестовые данные для тестирования производительности представляют из себя пару строк, сплошь состоящих из символа 'a', и каждая из них длинной в 500001 символ
 
 ## 7. Результаты и выводы
@@ -47,10 +47,12 @@ return 1;
 Корректность была проверена с помощью функциональных тестов.
 
 ### 7.2 Производительность
-| Mode        | Count | Time, s        | Speedup |
-|-------------|-------|----------------|---------|
-| seq         | 1     | 0.0013220787   | 1.00    |
-| mpi         | 2     | 0.0008940670   | 1.47    |
+| Mode         | Time, s        | Speedup |
+|--------------|----------------|---------|
+| seq, pipeline| 0.1137331963   | 1.00    |
+| mpi, pipeline| 0.0882450886   | 1.29    |
+| seq, task_run| 0.1136599541   | 1.00    |
+| mpi, task_run| 0.0863195980   | 1.32    |
 Speedup для mpi = (seq time / mpi time)
 
 ## 8. Заключение
@@ -64,16 +66,28 @@ bool TimofeevNLexicographicOrderingMPI::RunImpl() {
 
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  int size = 0;
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
   GetOutput() = std::pair<int, int>(1, 1);
+
+  if (size <= 1) {
+    for (size_t i = 0; !input.first.empty() && i < input.first.length() - 1; i++) {
+      GetOutput().first &= static_cast<int>(input.first[i] <= input.first[i + 1]);
+    }
+    for (size_t i = 0; !input.second.empty() && i < input.second.length() - 1; i++) {
+      GetOutput().second &= static_cast<int>(input.second[i] <= input.second[i + 1]);
+    }
+    return true;
+  }
 
   if (rank == 0) {
     // only true if comparison is true on every step
-    for (int i = 0; i < (int)input.first.length() - 1; i++) {
-      GetOutput().first &= input.first[i] <= input.first[i + 1];
+    for (size_t i = 0; !input.first.empty() && i < input.first.length() - 1; i++) {
+      GetOutput().first &= static_cast<int>(input.first[i] <= input.first[i + 1]);
     }
   } else if (rank == 1) {
-    for (int i = 0; i < (int)input.second.length() - 1; i++) {
-      GetOutput().second &= input.second[i] <= input.second[i + 1];
+    for (size_t i = 0; !input.second.empty() && i < input.second.length() - 1; i++) {
+      GetOutput().second &= static_cast<int>(input.second[i] <= input.second[i + 1]);
     }
   }
 
@@ -81,6 +95,7 @@ bool TimofeevNLexicographicOrderingMPI::RunImpl() {
   MPI_Bcast(&GetOutput().second, 1, MPI_INT, 1, MPI_COMM_WORLD);
 
   MPI_Barrier(MPI_COMM_WORLD);
-  return 1;
+
+  return true;
 }
 ```
