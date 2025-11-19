@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 
+#include <string>
+#include <utility>
+
 #include "timofeev_n_lexicographic_ordering/common/include/common.hpp"
 #include "timofeev_n_lexicographic_ordering/mpi/include/ops_mpi.hpp"
 #include "timofeev_n_lexicographic_ordering/seq/include/ops_seq.hpp"
 #include "util/include/perf_test_util.hpp"
-
-#include <string>
-#include <utility>
 
 namespace timofeev_n_lexicographic_ordering {
 

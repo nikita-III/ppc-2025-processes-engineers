@@ -2,7 +2,6 @@
 
 #include <mpi.h>
 
-
 #include "timofeev_n_lexicographic_ordering/common/include/common.hpp"
 #include "util/include/util.hpp"
 
