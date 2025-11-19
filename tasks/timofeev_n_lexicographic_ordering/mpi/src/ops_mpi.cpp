@@ -2,8 +2,10 @@
 
 #include <mpi.h>
 
+#include <cstddef>
+#include <utility>
+
 #include "timofeev_n_lexicographic_ordering/common/include/common.hpp"
-#include "util/include/util.hpp"
 
 namespace timofeev_n_lexicographic_ordering {
 

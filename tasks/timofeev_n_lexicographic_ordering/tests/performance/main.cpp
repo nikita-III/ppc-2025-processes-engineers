@@ -16,7 +16,7 @@ class LexicographicRunPerfTestProcesses : public ppc::util::BaseRunPerfTests<InT
   InType input_data_;
   //
   void SetUp() override {
-    std::string s_perf = "";
+    std::string s_perf;
     for (int i = 0; i < 500000; i++) {
       s_perf += 'a';
     }
