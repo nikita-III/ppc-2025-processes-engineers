@@ -25,10 +25,10 @@ bool TimofeevNLexicographicOrderingSEQ::RunImpl() {
   auto input = GetInput();
 
   // only true if comparison is true on every step
-  for (size_t i = 0; input.first.length() && i < input.first.length() - 1; i++) {
+  for (size_t i = 0; !input.first.empty() && i < input.first.length() - 1; i++) {
     GetOutput().first &= static_cast<int>(input.first[i] <= input.first[i + 1]);
   }
-  for (size_t i = 0; input.second.length() && i < input.second.length() - 1; i++) {
+  for (size_t i = 0; !input.second.empty() && i < input.second.length() - 1; i++) {
     GetOutput().second &= static_cast<int>(input.second[i] <= input.second[i + 1]);
   }
 

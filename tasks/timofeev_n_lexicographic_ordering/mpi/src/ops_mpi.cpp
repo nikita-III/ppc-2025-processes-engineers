@@ -28,15 +28,15 @@ bool TimofeevNLexicographicOrderingMPI::RunImpl() {
 
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  int size;
+  int size = 0;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   GetOutput() = std::pair<int, int>(1, 1);
 
   if (size <= 1) {
-    for (size_t i = 0; input.first.length() && i < input.first.length() - 1; i++) {
+    for (size_t i = 0; !input.first.empty() && i < input.first.length() - 1; i++) {
       GetOutput().first &= static_cast<int>(input.first[i] <= input.first[i + 1]);
     }
-    for (size_t i = 0; input.second.length() && i < input.second.length() - 1; i++) {
+    for (size_t i = 0; !input.second.empty() && i < input.second.length() - 1; i++) {
       GetOutput().second &= static_cast<int>(input.second[i] <= input.second[i + 1]);
     }
     return true;
@@ -44,11 +44,11 @@ bool TimofeevNLexicographicOrderingMPI::RunImpl() {
 
   if (rank == 0) {
     // only true if comparison is true on every step
-    for (size_t i = 0; input.first.length() && i < input.first.length() - 1; i++) {
+    for (size_t i = 0; !input.first.empty() && i < input.first.length() - 1; i++) {
       GetOutput().first &= static_cast<int>(input.first[i] <= input.first[i + 1]);
     }
   } else if (rank == 1) {
-    for (size_t i = 0; input.second.length() && i < input.second.length() - 1; i++) {
+    for (size_t i = 0; !input.second.empty() && i < input.second.length() - 1; i++) {
       GetOutput().second &= static_cast<int>(input.second[i] <= input.second[i + 1]);
     }
   }
