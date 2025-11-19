@@ -13,13 +13,14 @@ namespace timofeev_n_lexicographic_ordering {
 class LexicographicRunPerfTestProcesses : public ppc::util::BaseRunPerfTests<InType, OutType> {
   // const int kCount_ = 100;
   OutType expected_data_;
+  InType input_data_;
   //
   void SetUp() override {
     std::string s_perf = "";
     for (int i = 0; i < 500000; i++) {
       s_perf += 'a';
     }
-    InType input_data_ = std::make_pair(s_perf, s_perf);
+    input_data_ = std::make_pair(s_perf, s_perf);
     expected_data_ = std::make_pair(1, 1);
   }
 
