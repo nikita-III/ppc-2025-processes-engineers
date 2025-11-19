@@ -18,7 +18,7 @@ class LexicographicRunPerfTestProcesses : public ppc::util::BaseRunPerfTests<InT
   //
   void SetUp() override {
     std::string s_perf;
-    for (size_t i = 0; i < SIZE_MAX - 1; i++) {
+    for (size_t i = 0; i < static_cast<size_t>(5e7); i++) {
       s_perf += 'a';
     }
     input_data_ = std::make_pair(s_perf, s_perf);
