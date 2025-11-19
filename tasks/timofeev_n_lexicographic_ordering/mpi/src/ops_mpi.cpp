@@ -32,11 +32,11 @@ bool TimofeevNLexicographicOrderingMPI::RunImpl() {
 
   if (rank == 0) {
     // only true if comparison is true on every step
-    for (size_t i = 0; i < input.first.length() - 1; i++) {
+    for (size_t i = 0; input.first.length() > 0 && i < input.first.length() - 1; i++) {
       GetOutput().first &= static_cast<int>(input.first[i] <= input.first[i + 1]);
     }
   } else if (rank == 1) {
-    for (size_t i = 0; i < input.second.length() - 1; i++) {
+    for (size_t i = 0; input.second.length() > 0 && i < input.second.length() - 1; i++) {
       GetOutput().second &= static_cast<int>(input.second[i] <= input.second[i + 1]);
     }
   }
