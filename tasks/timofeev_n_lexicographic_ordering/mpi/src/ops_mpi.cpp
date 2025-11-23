@@ -45,18 +45,18 @@ bool TimofeevNLexicographicOrderingMPI::RunImpl() {
     auto input = GetInput();
     size_t second_length = input.second.length();
     MPI_Send(&second_length, 1, MPI_UNSIGNED_LONG, 1, 0, MPI_COMM_WORLD);
-    MPI_Send(input.second.c_str(), second_length, MPI_CHAR, 1, 1, MPI_COMM_WORLD);
+    MPI_Send(input.second.c_str(), static_cast<int>(second_length), MPI_CHAR, 1, 1, MPI_COMM_WORLD);
     // only true if comparison is true on every step
     for (size_t i = 0; !input.first.empty() && i < input.first.length() - 1; i++) {
       GetOutput().first &= static_cast<int>(input.first[i] <= input.first[i + 1]);
     }
   } else if (rank == 1) {
-    size_t llength;
+    size_t llength = 0;
     // если упадёт на каких-то мудрёных тестах - может быть, дело в size_t
     MPI_Recv(&llength, 1, MPI_UNSIGNED_LONG, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     char *inpput = new char[(llength + 1) * sizeof(char)];
     inpput[llength] = '\0';
-    MPI_Recv(inpput, llength, MPI_CHAR, 0, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Recv(inpput, static_cast<int>(llength), MPI_CHAR, 0, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     for (size_t i = 0; llength != 0 && i < llength - 1; i++) {
       GetOutput().second &= static_cast<int>(inpput[i] <= inpput[i + 1]);
     }
