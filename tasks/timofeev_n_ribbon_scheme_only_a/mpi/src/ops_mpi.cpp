@@ -41,7 +41,7 @@ void TimofeevNRibbonSchemeOnlyAMPI::SendingAParts(MatrixType &a, int &size, size
     }
   }
   for (size_t i = (size - 2) * k; i < a.size(); i++) {
-    MPI_Send(A[i].data(), a_row_size, MPI_INT, (size - 1), 0, MPI_COMM_WORLD);
+    MPI_Send(a[i].data(), a_row_size, MPI_INT, (size - 1), 0, MPI_COMM_WORLD);
   }
 }
 
