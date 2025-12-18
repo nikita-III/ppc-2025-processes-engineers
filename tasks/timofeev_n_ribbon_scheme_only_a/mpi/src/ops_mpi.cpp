@@ -107,7 +107,7 @@ bool TimofeevNRibbonSchemeOnlyAMPI::RunImpl() {
     BroadcastingParameters(k, a_size, a_row_size, b_size, b_row_size);
     BroadcastingB(b);
     SendingAParts(a, size, k);  // вместо этого - функция/макрос 3
-    std::vector<std::vector<int>> cmatr(A.size(), std::vector<int>(b_row_size));
+    std::vector<std::vector<int>> cmatr(a.size(), std::vector<int>(b_row_size));
     ReceivingCParts(cmatr, size, k, b_row_size);  // принимаем строки матрицы C // вместо этого - функция/макрос 2
     for (size_t i = 0; i < cmatr.size(); i++) {   // рассылка того, что получилось
       MPI_Bcast(cmatr[i].data(), b_row_size, MPI_INT, 0, MPI_COMM_WORLD);
