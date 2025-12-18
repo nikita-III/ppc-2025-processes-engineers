@@ -58,65 +58,65 @@ TEST_P(RibbonRunFuncTestsProcesses, MatmulFromPic) {
 }
 
 // MatrixType zaglushka = std::vector<std::vector<int>>(3, std::vector<int>(3, 0));
-MatrixType V_1_2 = std::vector<std::vector<int>>(1, std::vector<int>(2, 1));
-MatrixType V_2_1 = std::vector<std::vector<int>>(2, std::vector<int>(1, 1));
+MatrixType v_1_2 = std::vector<std::vector<int>>(1, std::vector<int>(2, 1));
+MatrixType v_2_1 = std::vector<std::vector<int>>(2, std::vector<int>(1, 1));
 
-MatrixType V_1_3 = std::vector<std::vector<int>>(1, std::vector<int>(3, 1));
-MatrixType V_3_1 = std::vector<std::vector<int>>(3, std::vector<int>(1, 1));
+MatrixType v_1_3 = std::vector<std::vector<int>>(1, std::vector<int>(3, 1));
+MatrixType v_3_1 = std::vector<std::vector<int>>(3, std::vector<int>(1, 1));
 
-MatrixType V_1_4 = std::vector<std::vector<int>>(1, std::vector<int>(4, 1));
-MatrixType V_4_1 = std::vector<std::vector<int>>(4, std::vector<int>(1, 1));
+MatrixType v_1_4 = std::vector<std::vector<int>>(1, std::vector<int>(4, 1));
+MatrixType v_4_1 = std::vector<std::vector<int>>(4, std::vector<int>(1, 1));
 
-MatrixType V_1_5 = std::vector<std::vector<int>>(1, std::vector<int>(5, 1));
-MatrixType V_5_1 = std::vector<std::vector<int>>(5, std::vector<int>(1, 1));
+MatrixType v_1_5 = std::vector<std::vector<int>>(1, std::vector<int>(5, 1));
+MatrixType v_5_1 = std::vector<std::vector<int>>(5, std::vector<int>(1, 1));
 
-MatrixType Const_2 = std::vector<std::vector<int>>(1, std::vector<int>(1, 2));
-MatrixType Const_3 = std::vector<std::vector<int>>(1, std::vector<int>(1, 3));
-MatrixType Const_4 = std::vector<std::vector<int>>(1, std::vector<int>(1, 4));
-MatrixType Const_5 = std::vector<std::vector<int>>(1, std::vector<int>(1, 5));
+MatrixType const_2 = std::vector<std::vector<int>>(1, std::vector<int>(1, 2));
+MatrixType const_3 = std::vector<std::vector<int>>(1, std::vector<int>(1, 3));
+MatrixType const_4 = std::vector<std::vector<int>>(1, std::vector<int>(1, 4));
+MatrixType const_5 = std::vector<std::vector<int>>(1, std::vector<int>(1, 5));
 
-MatrixType O_1_1 = std::vector<std::vector<int>>(1, std::vector<int>(1, 0));
+MatrixType o_1_1 = std::vector<std::vector<int>>(1, std::vector<int>(1, 0));
 
-MatrixType E_2_2 = {{1, 0}, {0, 1}};
-MatrixType One_2_2 = {{1, 1}, {1, 1}};
-MatrixType O_2_2 = {{0, 0}, {0, 0}};
-MatrixType Seq_2_2 = {{1, 2}, {3, 4}};
+MatrixType e_2_2 = {{1, 0}, {0, 1}};
+MatrixType one_2_2 = {{1, 1}, {1, 1}};
+MatrixType o_2_2 = {{0, 0}, {0, 0}};
+MatrixType seq_2_2 = {{1, 2}, {3, 4}};
 
-MatrixType E_3_3 = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
-MatrixType One_3_3 = {{1, 1, 1}, {1, 1, 1}, {1, 1, 1}};
-MatrixType O_3_3 = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
-MatrixType Seq_3_3 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+MatrixType e_3_3 = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+MatrixType one_3_3 = {{1, 1, 1}, {1, 1, 1}, {1, 1, 1}};
+MatrixType o_3_3 = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+MatrixType seq_3_3 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
 
-MatrixType E_4_4 = {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}};
-MatrixType One_4_4 = {{1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}};
-MatrixType O_4_4 = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
-MatrixType Seq_4_4 = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}};
+MatrixType e_4_4 = {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}};
+MatrixType one_4_4 = {{1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}};
+MatrixType o_4_4 = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
+MatrixType seq_4_4 = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}};
 
-MatrixType M_2_3 = {{1, 2, 3}, {4, 5, 6}};
-MatrixType M_3_2 = {{1, 2}, {3, 4}, {5, 6}};
-MatrixType M_2_2 = {{22, 28}, {49, 64}};
+MatrixType m_2_3 = {{1, 2, 3}, {4, 5, 6}};
+MatrixType m_3_2 = {{1, 2}, {3, 4}, {5, 6}};
+MatrixType m_2_2 = {{22, 28}, {49, 64}};
 
-MatrixType M_3_4 = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}};
-MatrixType M_4_3 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}};
-MatrixType M_3_3 = {{70, 80, 90}, {158, 184, 210}, {246, 288, 330}};
+MatrixType m_3_4 = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}};
+MatrixType m_4_3 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}};
+MatrixType m_3_3 = {{70, 80, 90}, {158, 184, 210}, {246, 288, 330}};
 
 // expected, out, in, string
 const std::array<TestType, 15> kTestParam = {
-    std::make_tuple(E_2_2, O_2_2, std::make_pair(E_2_2, E_2_2), "One_2_2"),
-    std::make_tuple(Seq_2_2, O_2_2, std::make_pair(E_2_2, Seq_2_2), "Seq_2_2"),
-    std::make_tuple(Seq_2_2, O_2_2, std::make_pair(Seq_2_2, E_2_2), "Seq_2_2_VV"),
-    std::make_tuple(E_3_3, O_3_3, std::make_pair(E_3_3, E_3_3), "One_3_3"),
-    std::make_tuple(Seq_3_3, O_3_3, std::make_pair(E_3_3, Seq_3_3), "Seq_3_3"),
-    std::make_tuple(Seq_3_3, O_3_3, std::make_pair(Seq_3_3, E_3_3), "Seq_3_3_VV"),
-    std::make_tuple(E_4_4, O_4_4, std::make_pair(E_4_4, E_4_4), "One_4_4"),
-    std::make_tuple(Seq_4_4, O_4_4, std::make_pair(E_4_4, Seq_4_4), "Seq_4_4"),
-    std::make_tuple(Seq_4_4, O_4_4, std::make_pair(Seq_4_4, E_4_4), "Seq_4_4_VV"),
-    std::make_tuple(M_2_2, O_2_2, std::make_pair(M_2_3, M_3_2), "2_3_by_3_2"),
-    std::make_tuple(M_3_3, O_3_3, std::make_pair(M_3_4, M_4_3), "3_4_by_4_3"),
-    std::make_tuple(Const_2, O_1_1, std::make_pair(V_1_2, V_2_1), "Vectors_1_2_and_2_1"),
-    std::make_tuple(Const_3, O_1_1, std::make_pair(V_1_3, V_3_1), "Vectors_1_3_and_3_1"),
-    std::make_tuple(Const_4, O_1_1, std::make_pair(V_1_4, V_4_1), "Vectors_1_4_and_4_1"),
-    std::make_tuple(Const_5, O_1_1, std::make_pair(V_1_5, V_5_1), "Vectors_1_5_and_5_1")};
+    std::make_tuple(e_2_2, o_2_2, std::make_pair(e_2_2, e_2_2), "one_2_2"),
+    std::make_tuple(seq_2_2, o_2_2, std::make_pair(e_2_2, seq_2_2), "seq_2_2"),
+    std::make_tuple(seq_2_2, o_2_2, std::make_pair(seq_2_2, e_2_2), "seq_2_2_VV"),
+    std::make_tuple(e_3_3, o_3_3, std::make_pair(e_3_3, e_3_3), "one_3_3"),
+    std::make_tuple(seq_3_3, o_3_3, std::make_pair(e_3_3, seq_3_3), "seq_3_3"),
+    std::make_tuple(seq_3_3, o_3_3, std::make_pair(seq_3_3, e_3_3), "seq_3_3_VV"),
+    std::make_tuple(e_4_4, o_4_4, std::make_pair(e_4_4, e_4_4), "one_4_4"),
+    std::make_tuple(seq_4_4, o_4_4, std::make_pair(e_4_4, seq_4_4), "seq_4_4"),
+    std::make_tuple(seq_4_4, o_4_4, std::make_pair(seq_4_4, e_4_4), "seq_4_4_VV"),
+    std::make_tuple(m_2_2, o_2_2, std::make_pair(m_2_3, m_3_2), "2_3_by_3_2"),
+    std::make_tuple(m_3_3, o_3_3, std::make_pair(m_3_4, m_4_3), "3_4_by_4_3"),
+    std::make_tuple(const_2, o_1_1, std::make_pair(v_1_2, v_2_1), "vectors_1_2_and_2_1"),
+    std::make_tuple(const_3, o_1_1, std::make_pair(v_1_3, v_3_1), "vectors_1_3_and_3_1"),
+    std::make_tuple(const_4, o_1_1, std::make_pair(v_1_4, v_4_1), "vectors_1_4_and_4_1"),
+    std::make_tuple(const_5, o_1_1, std::make_pair(v_1_5, v_5_1), "vectors_1_5_and_5_1")};
 
 const auto kTestTasksList = std::tuple_cat(ppc::util::AddFuncTask<TimofeevNRibbonSchemeOnlyAMPI, InType>(
                                                kTestParam, PPC_SETTINGS_timofeev_n_ribbon_scheme_only_a),
@@ -127,7 +127,7 @@ const auto kGtestValues = ppc::util::ExpandToValues(kTestTasksList);
 
 const auto kPerfTestName = RibbonRunFuncTestsProcesses::PrintFuncTestName<RibbonRunFuncTestsProcesses>;
 
-INSTANTIATE_TEST_SUITE_P(PicMatrixTests, RibbonRunFuncTestsProcesses, kGtestValues, kPerfTestName);
+INSTANTIATe_TEST_SUITe_P(PicMatrixTests, RibbonRunFuncTestsProcesses, kGtestValues, kPerfTestName);
 
 }  // namespace
 

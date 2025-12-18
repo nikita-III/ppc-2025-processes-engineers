@@ -19,7 +19,7 @@ class TimofeevNRibbonSchemeOnlyASEQ : public BaseTask {
   bool PreProcessingImpl() override;
   bool RunImpl() override;
   bool PostProcessingImpl() override;
-  int CalculatingCElement(MatrixType &a, MatrixType &b, size_t &i, size_t &j);
+  static int CalculatingCElement(MatrixType &a, MatrixType &b, size_t &i, size_t &j);
 };
 
 }  // namespace timofeev_n_ribbon_scheme_only_a

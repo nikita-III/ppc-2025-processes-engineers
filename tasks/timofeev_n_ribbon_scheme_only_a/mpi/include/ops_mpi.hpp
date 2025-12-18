@@ -19,12 +19,12 @@ class TimofeevNRibbonSchemeOnlyAMPI : public BaseTask {
   bool PreProcessingImpl() override;
   bool RunImpl() override;
   bool PostProcessingImpl() override;
-  void SendingAParts(MatrixType &a, int &size, size_t &k);
-  void ReceivingCParts(MatrixType &cmatr, int &size, size_t &k, size_t &b_row_size);
-  int CalculatingCElement(MatrixType &a_part, MatrixType &b_copy, size_t &i, size_t &j);
+  static void SendingAParts(MatrixType &a, int &size, size_t &k);
+  static void ReceivingCParts(MatrixType &cmatr, int &size, size_t &k, size_t &b_row_size);
+  static int CalculatingCElement(MatrixType &a_part, MatrixType &b_copy, size_t &i, size_t &j);
   void CalculatingCPart(size_t &k, MatrixType &a_part, MatrixType &b_copy, MatrixType &c_part);
-  void BroadcastingParameters(size_t &k, size_t &a_size, size_t &a_row_size, size_t &b_size, size_t &b_row_size);
-  void BroadcastingB(MatrixType &b);
+  static void BroadcastingParameters(size_t &k, size_t &a_size, size_t &a_row_size, size_t &b_size, size_t &b_row_size);
+  static void BroadcastingB(MatrixType &b);
 };
 
 }  // namespace timofeev_n_ribbon_scheme_only_a
