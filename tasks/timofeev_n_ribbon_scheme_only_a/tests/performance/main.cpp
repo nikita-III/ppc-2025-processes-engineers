@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
 
+#include <utility>
+#include <vector>
+
 #include "timofeev_n_ribbon_scheme_only_a/common/include/common.hpp"
 #include "timofeev_n_ribbon_scheme_only_a/mpi/include/ops_mpi.hpp"
 #include "timofeev_n_ribbon_scheme_only_a/seq/include/ops_seq.hpp"

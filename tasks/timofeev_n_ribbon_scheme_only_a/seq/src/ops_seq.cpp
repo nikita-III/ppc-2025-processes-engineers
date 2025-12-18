@@ -1,10 +1,8 @@
 #include "timofeev_n_ribbon_scheme_only_a/seq/include/ops_seq.hpp"
 
-#include <numeric>
 #include <vector>
 
 #include "timofeev_n_ribbon_scheme_only_a/common/include/common.hpp"
-#include "util/include/util.hpp"
 
 namespace timofeev_n_ribbon_scheme_only_a {
 
@@ -24,11 +22,11 @@ bool TimofeevNRibbonSchemeOnlyASEQ::ValidationImpl() {
   if (m2 != m1 || n == 0 || m1 == 0 || m2 == 0 || k == 0) {
     return false;
   }
-  return 1;
+  return true;
 }
 
 bool TimofeevNRibbonSchemeOnlyASEQ::PreProcessingImpl() {
-  return 1;
+  return true;
 }
 
 int TimofeevNRibbonSchemeOnlyASEQ::CalculatingCElement(MatrixType &a, MatrixType &b, size_t &i, size_t &j) {
@@ -49,11 +47,11 @@ bool TimofeevNRibbonSchemeOnlyASEQ::RunImpl() {
     }
   }
   GetOutput() = c;
-  return 1;
+  return true;
 }
 
 bool TimofeevNRibbonSchemeOnlyASEQ::PostProcessingImpl() {
-  return 1;
+  return true;
 }
 
 }  // namespace timofeev_n_ribbon_scheme_only_a
