@@ -13,21 +13,25 @@ class RibbonRunPerfTestProcesses : public ppc::util::BaseRunPerfTests<InType, Ou
   InType input_data_;
 
   void SetUp() override {
-    MatrixType A(kCount_, std::vector<int>(kCount_, 0));
-    MatrixType B(kCount_, std::vector<int>(kCount_, 1));
-    for (int i = 0; i < kCount_; i++)
-      A[i][i] = 1;
-    input_data_ = std::make_pair(A, B);
-    expected_data_ = B;
+    MatrixType a(kCount_, std::vector<int>(kCount_, 0));
+    MatrixType b(kCount_, std::vector<int>(kCount_, 1));
+    for (int i = 0; i < kCount_; i++) {
+      a[i][i] = 1;
+    }
+    input_data_ = std::make_pair(a, b);
+    expected_data_ = b;
   }
 
   bool CheckTestOutputData(OutType &output_data) final {
-    if (output_data.size() != expected_data_.size() || output_data[0].size() != expected_data_[0].size())
-      return 0;
+    if (output_data.size() != expected_data_.size() || output_data[0].size() != expected_data_[0].size()) {
+      return false;
+    }
     bool yesyes = true;
-    for (int i = 0; i < kCount_; i++)
-      for(int j = 0; j < kCount_; j++)
+    for (int i = 0; i < kCount_; i++) {
+      for (int j = 0; j < kCount_; j++) {
         yesyes &= output_data[i][j] == expected_data_[i][j];
+      }
+    }
     return yesyes;
   }
 
@@ -41,7 +45,8 @@ TEST_P(RibbonRunPerfTestProcesses, RunPerfModes) {
 }
 
 const auto kAllPerfTasks =
-    ppc::util::MakeAllPerfTasks<InType, TimofeevNRibbonSchemeOnlyAMPI, TimofeevNRibbonSchemeOnlyASEQ>(PPC_SETTINGS_timofeev_n_ribbon_scheme_only_a);
+    ppc::util::MakeAllPerfTasks<InType, TimofeevNRibbonSchemeOnlyAMPI, TimofeevNRibbonSchemeOnlyASEQ>(
+        PPC_SETTINGS_timofeev_n_ribbon_scheme_only_a);
 
 const auto kGtestValues = ppc::util::TupleToGTestValues(kAllPerfTasks);
 
