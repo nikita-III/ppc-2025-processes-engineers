@@ -96,17 +96,17 @@ bool TimofeevNRibbonSchemeOnlyAMPI::RunImpl() {
   MPI_Comm_size(MPI_COMM_WORLD, &size);
 
   if (rank == 0) {
-    MatrixType A = GetInput().first;
-    MatrixType B = GetInput().second;
+    MatrixType a = GetInput().first;
+    MatrixType b = GetInput().second;
     size_t k = 0;
-    k = A.size() / (size_t)(size - 1) + (A.size() % (size_t)(size - 1) > 0 ? 1 : 0);
-    size_t a_size = A.size();
-    size_t a_row_size = A[0].size();
-    size_t b_size = B.size();
-    size_t b_row_size = B[0].size();
+    k = a.size() / (size_t)(size - 1) + (a.size() % (size_t)(size - 1) > 0 ? 1 : 0);
+    size_t a_size = a.size();
+    size_t a_row_size = a[0].size();
+    size_t b_size = b.size();
+    size_t b_row_size = b[0].size();
     BroadcastingParameters(k, a_size, a_row_size, b_size, b_row_size);
-    BroadcastingB(B);
-    SendingAParts(A, size, k);  // вместо этого - функция/макрос 3
+    BroadcastingB(b);
+    SendingAParts(a, size, k);  // вместо этого - функция/макрос 3
     std::vector<std::vector<int>> cmatr(A.size(), std::vector<int>(b_row_size));
     ReceivingCParts(cmatr, size, k, b_row_size);  // принимаем строки матрицы C // вместо этого - функция/макрос 2
     for (size_t i = 0; i < cmatr.size(); i++) {   // рассылка того, что получилось
