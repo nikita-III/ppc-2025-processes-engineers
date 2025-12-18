@@ -61,7 +61,7 @@ TEST_P(RibbonRunFuncTestsProcesses, MatmulFromPic) {
   ExecuteTest(GetParam());
 }
 
-//MatrixType zaglushka = std::vector<std::vector<int>>(3, std::vector<int>(3, 0));
+// MatrixType zaglushka = std::vector<std::vector<int>>(3, std::vector<int>(3, 0));
 MatrixType V_1_2 = std::vector<std::vector<int>>(1, std::vector<int>(2, 1));
 MatrixType V_2_1 = std::vector<std::vector<int>>(2, std::vector<int>(1, 1));
 
@@ -81,63 +81,28 @@ MatrixType Const_5 = std::vector<std::vector<int>>(1, std::vector<int>(1, 5));
 
 MatrixType O_1_1 = std::vector<std::vector<int>>(1, std::vector<int>(1, 0));
 
-MatrixType E_2_2 = {{1, 0},
-                    {0, 1}};
-MatrixType One_2_2 = {{1, 1},
-                      {1, 1}};
-MatrixType O_2_2 = {{0, 0},
-                    {0, 0}};
-MatrixType Seq_2_2 = {{1, 2},
-                      {3, 4}};
+MatrixType E_2_2 = {{1, 0}, {0, 1}};
+MatrixType One_2_2 = {{1, 1}, {1, 1}};
+MatrixType O_2_2 = {{0, 0}, {0, 0}};
+MatrixType Seq_2_2 = {{1, 2}, {3, 4}};
 
-MatrixType E_3_3 = {{1, 0, 0},
-                    {0, 1, 0},
-                    {0, 0, 1}};
-MatrixType One_3_3 = {{1, 1, 1},
-                      {1, 1, 1},
-                      {1, 1, 1}};
-MatrixType O_3_3 = {{0, 0, 0},
-                    {0, 0, 0},
-                    {0, 0, 0}};
-MatrixType Seq_3_3 = {{1, 2, 3},
-                      {4, 5, 6},
-                      {7, 8, 9}};
-                      
-MatrixType E_4_4 = {{1, 0, 0, 0},
-                    {0, 1, 0, 0},
-                    {0, 0, 1, 0},
-                    {0, 0, 0, 1}};
-MatrixType One_4_4 = {{1, 1, 1, 1},
-                      {1, 1, 1, 1},
-                      {1, 1, 1, 1},
-                      {1, 1, 1, 1}};
-MatrixType O_4_4 = {{0, 0, 0, 0},
-                    {0, 0, 0, 0},
-                    {0, 0, 0, 0},
-                    {0, 0, 0, 0}};
-MatrixType Seq_4_4 = {{1, 2, 3, 4},
-                      {5, 6, 7, 8},
-                      {9, 10, 11, 12},
-                      {13, 14, 15, 16}};
+MatrixType E_3_3 = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+MatrixType One_3_3 = {{1, 1, 1}, {1, 1, 1}, {1, 1, 1}};
+MatrixType O_3_3 = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+MatrixType Seq_3_3 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
 
-MatrixType M_2_3 = {{1, 2, 3},
-                    {4, 5, 6}};
-MatrixType M_3_2 = {{1, 2},
-                    {3, 4},
-                    {5, 6}};
-MatrixType M_2_2 = {{22, 28},
-                    {49, 64}};
+MatrixType E_4_4 = {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}};
+MatrixType One_4_4 = {{1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}};
+MatrixType O_4_4 = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
+MatrixType Seq_4_4 = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}};
 
-MatrixType M_3_4 = {{1, 2, 3, 4},
-                    {5, 6, 7, 8},
-                    {9, 10, 11, 12}};
-MatrixType M_4_3 = {{1, 2, 3},
-                    {4, 5, 6},
-                    {7, 8, 9},
-                    {10, 11, 12}};
-MatrixType M_3_3 = {{70, 80, 90},
-                    {158, 184, 210},
-                    {246, 288, 330}};
+MatrixType M_2_3 = {{1, 2, 3}, {4, 5, 6}};
+MatrixType M_3_2 = {{1, 2}, {3, 4}, {5, 6}};
+MatrixType M_2_2 = {{22, 28}, {49, 64}};
+
+MatrixType M_3_4 = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}};
+MatrixType M_4_3 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}};
+MatrixType M_3_3 = {{70, 80, 90}, {158, 184, 210}, {246, 288, 330}};
 
 // expected, out, in, string
 const std::array<TestType, 15> kTestParam = {
