@@ -31,7 +31,7 @@ bool TimofeevNRibbonSchemeOnlyAMPI::PreProcessingImpl() {
   return true;
 }
 
-static void TimofeevNRibbonSchemeOnlyAMPI::SendingAParts(MatrixType &a, int &size, size_t &k) {
+void TimofeevNRibbonSchemeOnlyAMPI::SendingAParts(MatrixType &a, int &size, size_t &k) {
   size_t a_row_size = a[0].size();
   for (size_t i = 0; (i + 1) < static_cast<size_t>(size - 1); i++) {
     for (size_t j = 0; j < k && (i * k) + j < a.size(); j++) {  // по k строчек
@@ -44,7 +44,7 @@ static void TimofeevNRibbonSchemeOnlyAMPI::SendingAParts(MatrixType &a, int &siz
   }
 }
 
-static void TimofeevNRibbonSchemeOnlyAMPI::ReceivingCParts(MatrixType &cmatr, int &size, size_t &k,
+void TimofeevNRibbonSchemeOnlyAMPI::ReceivingCParts(MatrixType &cmatr, int &size, size_t &k,
                                                            size_t &b_row_size) {
   for (size_t i = 0; (i + 1) < static_cast<size_t>(size - 1); i++) {
     for (size_t j = 0; j < k && (i * k) + j < cmatr.size(); j++) {  // по k строчек
@@ -57,7 +57,7 @@ static void TimofeevNRibbonSchemeOnlyAMPI::ReceivingCParts(MatrixType &cmatr, in
   }
 }
 
-static int TimofeevNRibbonSchemeOnlyAMPI::CalculatingCElement(MatrixType &a_part, MatrixType &b_copy, size_t &i,
+int TimofeevNRibbonSchemeOnlyAMPI::CalculatingCElement(MatrixType &a_part, MatrixType &b_copy, size_t &i,
                                                               size_t &j) {
   int summ = 0;
   for (size_t kk = 0; kk < a_part[0].size(); kk++) {
@@ -75,7 +75,7 @@ void TimofeevNRibbonSchemeOnlyAMPI::CalculatingCPart(size_t &k, MatrixType &a_pa
   }
 }
 
-static void TimofeevNRibbonSchemeOnlyAMPI::BroadcastingParameters(size_t &k, size_t &a_size, size_t &a_row_size,
+void TimofeevNRibbonSchemeOnlyAMPI::BroadcastingParameters(size_t &k, size_t &a_size, size_t &a_row_size,
                                                                   size_t &b_size, size_t &b_row_size) {
   MPI_Bcast(&k, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
   MPI_Bcast(&a_size, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
@@ -84,7 +84,7 @@ static void TimofeevNRibbonSchemeOnlyAMPI::BroadcastingParameters(size_t &k, siz
   MPI_Bcast(&b_row_size, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
 }
 
-static void TimofeevNRibbonSchemeOnlyAMPI::BroadcastingB(MatrixType &b) {
+void TimofeevNRibbonSchemeOnlyAMPI::BroadcastingB(MatrixType &b) {
   size_t b_row_size = b[0].size();
   for (ato &i : b) {
     MPI_Bcast(i.data(), static_cast<int>(b_row_size), MPI_INT, 0, MPI_COMM_WORLD);

@@ -29,7 +29,7 @@ bool TimofeevNRibbonSchemeOnlyASEQ::PreProcessingImpl() {
   return true;
 }
 
-static int TimofeevNRibbonSchemeOnlyASEQ::CalculatingCElement(MatrixType &a, MatrixType &b, size_t &i, size_t &j) {
+int TimofeevNRibbonSchemeOnlyASEQ::CalculatingCElement(MatrixType &a, MatrixType &b, size_t &i, size_t &j) {
   int summ = 0;
   for (size_t kk = 0; kk < a[0].size(); kk++) {
     summ += a[i][kk] * b[kk][j];
