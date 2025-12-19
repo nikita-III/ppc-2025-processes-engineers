@@ -1,6 +1,7 @@
 #include "timofeev_n_ribbon_scheme_only_a/seq/include/ops_seq.hpp"
 
 #include <vector>
+#include <cstddef>
 
 #include "timofeev_n_ribbon_scheme_only_a/common/include/common.hpp"
 
