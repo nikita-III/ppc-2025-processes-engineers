@@ -127,7 +127,7 @@ const auto kGtestValues = ppc::util::ExpandToValues(kTestTasksList);
 
 const auto kPerfTestName = RibbonRunFuncTestsProcesses::PrintFuncTestName<RibbonRunFuncTestsProcesses>;
 
-INSTANTIATe_TEST_SUITE_P(PicMatrixTests, RibbonRunFuncTestsProcesses, kGtestValues, kPerfTestName);
+INSTANTIATE_TEST_SUITE_P(PicMatrixTests, RibbonRunFuncTestsProcesses, kGtestValues, kPerfTestName);
 
 }  // namespace
 
