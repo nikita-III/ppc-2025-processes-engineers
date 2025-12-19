@@ -22,7 +22,7 @@ class TimofeevNRibbonSchemeOnlyAMPI : public BaseTask {
   static void SendingAParts(MatrixType &a, int &size, size_t &k);
   static void ReceivingCParts(MatrixType &cmatr, int &size, size_t &k, size_t &b_row_size);
   static int CalculatingCElement(MatrixType &a_part, MatrixType &b_copy, size_t &i, size_t &j);
-  void CalculatingCPart(size_t &k, MatrixType &a_part, MatrixType &b_copy, MatrixType &c_part);
+  static void CalculatingCPart(size_t &k, MatrixType &a_part, MatrixType &b_copy, MatrixType &c_part);
   static void BroadcastingParameters(size_t &k, size_t &a_size, size_t &a_row_size, size_t &b_size, size_t &b_row_size);
   static void BroadcastingB(MatrixType &b);
 };
