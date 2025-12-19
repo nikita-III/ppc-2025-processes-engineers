@@ -29,27 +29,65 @@ bool TimofeevNRibbonSchemeOnlyAMPI::PreProcessingImpl() {
   return true;
 }
 
-void TimofeevNRibbonSchemeOnlyAMPI::SendingAParts(MatrixType &a, int &size, size_t &k) {
+void TimofeevNRibbonSchemeOnlyAMPI::SendingAParts(MatrixType &a, int &size, size_t k) {
   size_t a_row_size = a[0].size();
-  for (size_t i = 0; (i + 1) < static_cast<size_t>(size - 1); i++) {
+  size_t a_size = a.size();
+  size_t i = 0;
+  size_t iter = 0;
+  //size_t k_old = k;
+  for (; i < static_cast<size_t>(size - 2) && a_size > 0; i++) {
+    MPI_Send(&k, 1, MPI_UNSIGNED_LONG, static_cast<int>(i + 1), 0, MPI_COMM_WORLD);
     for (size_t j = 0; j < k && (i * k) + j < a.size(); j++) {  // по k строчек
       MPI_Send(a[(i * k) + j].data(), static_cast<int>(a_row_size), MPI_INT, static_cast<int>(i + 1), 0,
                MPI_COMM_WORLD);  // A[i + j]
     }
+    if (a_size > k) {
+      a_size -= k;
+      iter++;
+    } else {
+      a_size = 0;
+      k = 0;
+    }
+    std::cout << " " << k << " " << iter << " " << a_size << " -1-\n";
   }
-  for (size_t i = (size - 2) * k; i < a.size(); i++) {
+  std::cout << " " << k << " " << iter << " " << a.size() << " -2-\n";
+  i++;
+  i = (a.size() == 1 ? 1 : i);
+  //k = (a.size() == 1 ? 0 : k);
+  for (; k == 0 && i < static_cast<size_t>(size - 1); i++) {
+    MPI_Send(&k, 1, MPI_UNSIGNED_LONG, static_cast<int>(i + 1), 0, MPI_COMM_WORLD);
+  }
+  // отдельно обрабатываем последний процесс
+  std::cout << " " << k << " " << iter * k << " " << a_size << " -3-\n";
+  //size_t leftover = a.size() - iter * k;
+  MPI_Send(&a_size, 1, MPI_UNSIGNED_LONG, static_cast<int>(size - 1), 0, MPI_COMM_WORLD);
+  for (i = a.size() - a_size; i < a.size(); i++) {
     MPI_Send(a[i].data(), static_cast<int>(a_row_size), MPI_INT, (size - 1), 0, MPI_COMM_WORLD);
   }
+  std::cout << " gthtlfkb -3-\n";
 }
 
-void TimofeevNRibbonSchemeOnlyAMPI::ReceivingCParts(MatrixType &cmatr, int &size, size_t &k, size_t &b_row_size) {
-  for (size_t i = 0; (i + 1) < static_cast<size_t>(size - 1); i++) {
+void TimofeevNRibbonSchemeOnlyAMPI::ReceivingCParts(MatrixType &cmatr, int &size, size_t k, size_t &b_row_size) {
+  size_t c_size = cmatr.size();
+  size_t i = 0;
+  size_t iter = 0;
+  for (; i < static_cast<size_t>(size - 2) && c_size > 0; i++) {
     for (size_t j = 0; j < k && (i * k) + j < cmatr.size(); j++) {  // по k строчек
       MPI_Recv(cmatr[(i * k) + j].data(), static_cast<int>(b_row_size), MPI_INT, static_cast<int>(i + 1), 1,
                MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
+    if (c_size > k) {
+      c_size -= k;
+      iter++;
+    } else {
+      c_size = 0;
+      k = 0;
+    }
   }
-  for (size_t i = (size - 2) * k; i < cmatr.size(); i++) {
+  std::cout << " " << k << " " << iter * k << " " << c_size << " ---\n";
+  // отдельно обрабатываем последний процесс
+  //size_t leftover = cmatr.size() - iter * k;
+  for (i = cmatr.size() - c_size; i < cmatr.size(); i++) {
     MPI_Recv(cmatr[i].data(), static_cast<int>(b_row_size), MPI_INT, (size - 1), 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
   }
 }
@@ -71,9 +109,8 @@ void TimofeevNRibbonSchemeOnlyAMPI::CalculatingCPart(size_t &k, MatrixType &a_pa
   }
 }
 
-void TimofeevNRibbonSchemeOnlyAMPI::BroadcastingParameters(size_t &k, size_t &a_size, size_t &a_row_size,
+void TimofeevNRibbonSchemeOnlyAMPI::BroadcastingParameters(size_t &a_size, size_t &a_row_size,
                                                            size_t &b_size, size_t &b_row_size) {
-  MPI_Bcast(&k, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
   MPI_Bcast(&a_size, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
   MPI_Bcast(&a_row_size, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
   MPI_Bcast(&b_size, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
@@ -81,6 +118,9 @@ void TimofeevNRibbonSchemeOnlyAMPI::BroadcastingParameters(size_t &k, size_t &a_
 }
 
 void TimofeevNRibbonSchemeOnlyAMPI::BroadcastingB(MatrixType &b) {
+  if (b.empty() || b[0].empty()) {
+    return;
+  }
   size_t b_row_size = b[0].size();
   for (auto &i : b) {
     MPI_Bcast(i.data(), static_cast<int>(b_row_size), MPI_INT, 0, MPI_COMM_WORLD);
@@ -102,11 +142,15 @@ bool TimofeevNRibbonSchemeOnlyAMPI::RunImpl() {
     size_t a_row_size = a[0].size();
     size_t b_size = b.size();
     size_t b_row_size = b[0].size();
-    BroadcastingParameters(k, a_size, a_row_size, b_size, b_row_size);
+    std::cout << rank << " кастуем параметры\n";
+    BroadcastingParameters(a_size, a_row_size, b_size, b_row_size);
+    std::cout << rank << " кастуем B\n";
     BroadcastingB(b);
-    SendingAParts(a, size, k);  // вместо этого - функция/макрос 3
+    std::cout << rank << " кастуем A\n";
+    SendingAParts(a, size, k);
+    std::cout << rank << " принимаем C\n";
     std::vector<std::vector<int>> cmatr(a.size(), std::vector<int>(b_row_size));
-    ReceivingCParts(cmatr, size, k, b_row_size);  // принимаем строки матрицы C // вместо этого - функция/макрос 2
+    ReceivingCParts(cmatr, size, k, b_row_size);  // принимаем строки матрицы C
     for (auto &i : cmatr) {                       // рассылка того, что получилось
       MPI_Bcast(i.data(), static_cast<int>(b_row_size), MPI_INT, 0, MPI_COMM_WORLD);
     }
@@ -117,12 +161,11 @@ bool TimofeevNRibbonSchemeOnlyAMPI::RunImpl() {
     size_t a_row_size;
     size_t b_size;
     size_t b_row_size;
-    BroadcastingParameters(k, a_size, a_row_size, b_size, b_row_size);
+    BroadcastingParameters(a_size, a_row_size, b_size, b_row_size);
     std::vector<std::vector<int>> b_copy(b_size, std::vector<int>(b_row_size));
     BroadcastingB(b_copy);
-    if (rank == size - 1) {  // отдельно обрабатываем последний процесс
-      k = a_size - ((size - 2) * k);
-    }
+    MPI_Recv(&k, 1, MPI_UNSIGNED_LONG, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    std::cout << rank << " " << k << " к\n";
     std::vector<std::vector<int>> a_part(k, std::vector<int>(a_row_size));
     for (size_t j = 0; j < k; j++) {  // принимаем строки A
       MPI_Recv(a_part[j].data(), static_cast<int>(a_row_size), MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);

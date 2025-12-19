@@ -70,10 +70,10 @@ MatrixType v_4_1 = std::vector<std::vector<int>>(4, std::vector<int>(1, 1));
 MatrixType v_1_5 = std::vector<std::vector<int>>(1, std::vector<int>(5, 1));
 MatrixType v_5_1 = std::vector<std::vector<int>>(5, std::vector<int>(1, 1));
 
-MatrixType const_2 = std::vector<std::vector<int>>(1, std::vector<int>(1, 2));
-MatrixType const_3 = std::vector<std::vector<int>>(1, std::vector<int>(1, 3));
-MatrixType const_4 = std::vector<std::vector<int>>(1, std::vector<int>(1, 4));
-MatrixType const_5 = std::vector<std::vector<int>>(1, std::vector<int>(1, 5));
+MatrixType const_2 = {{2}};
+MatrixType const_3 = {{3}};
+MatrixType const_4 = {{4}};
+MatrixType const_5 = {{5}};
 
 MatrixType o_1_1 = std::vector<std::vector<int>>(1, std::vector<int>(1, 0));
 
