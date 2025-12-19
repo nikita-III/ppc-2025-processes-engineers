@@ -44,8 +44,7 @@ void TimofeevNRibbonSchemeOnlyAMPI::SendingAParts(MatrixType &a, int &size, size
   }
 }
 
-void TimofeevNRibbonSchemeOnlyAMPI::ReceivingCParts(MatrixType &cmatr, int &size, size_t &k,
-                                                           size_t &b_row_size) {
+void TimofeevNRibbonSchemeOnlyAMPI::ReceivingCParts(MatrixType &cmatr, int &size, size_t &k, size_t &b_row_size) {
   for (size_t i = 0; (i + 1) < static_cast<size_t>(size - 1); i++) {
     for (size_t j = 0; j < k && (i * k) + j < cmatr.size(); j++) {  // по k строчек
       MPI_Recv(cmatr[(i * k) + j].data(), static_cast<int>(b_row_size), MPI_INT, static_cast<int>(i + 1), 1,
@@ -57,8 +56,7 @@ void TimofeevNRibbonSchemeOnlyAMPI::ReceivingCParts(MatrixType &cmatr, int &size
   }
 }
 
-int TimofeevNRibbonSchemeOnlyAMPI::CalculatingCElement(MatrixType &a_part, MatrixType &b_copy, size_t &i,
-                                                              size_t &j) {
+int TimofeevNRibbonSchemeOnlyAMPI::CalculatingCElement(MatrixType &a_part, MatrixType &b_copy, size_t &i, size_t &j) {
   int summ = 0;
   for (size_t kk = 0; kk < a_part[0].size(); kk++) {
     summ += a_part[i][kk] * b_copy[kk][j];
@@ -76,7 +74,7 @@ void TimofeevNRibbonSchemeOnlyAMPI::CalculatingCPart(size_t &k, MatrixType &a_pa
 }
 
 void TimofeevNRibbonSchemeOnlyAMPI::BroadcastingParameters(size_t &k, size_t &a_size, size_t &a_row_size,
-                                                                  size_t &b_size, size_t &b_row_size) {
+                                                           size_t &b_size, size_t &b_row_size) {
   MPI_Bcast(&k, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
   MPI_Bcast(&a_size, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
   MPI_Bcast(&a_row_size, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
