@@ -3,6 +3,7 @@
 #include <mpi.h>
 
 #include <vector>
+#include <cstddef>
 
 #include "timofeev_n_ribbon_scheme_only_a/common/include/common.hpp"
 
@@ -21,10 +22,7 @@ bool TimofeevNRibbonSchemeOnlyAMPI::ValidationImpl() {
   size_t m2 = a[0].size();
   size_t m1 = b.size();
   size_t k = b[0].size();
-  if (m2 != m1 || n == 0 || m1 == 0 || m2 == 0 || k == 0) {
-    return false;
-  }
-  return true;
+  return !(m2 != m1 || n == 0 || m1 == 0 || m2 == 0 || k == 0);
 }
 
 bool TimofeevNRibbonSchemeOnlyAMPI::PreProcessingImpl() {
@@ -114,7 +112,11 @@ bool TimofeevNRibbonSchemeOnlyAMPI::RunImpl() {
     }
     GetOutput() = cmatr;
   } else {
-    size_t k, a_size, a_row_size, b_size, b_row_size;
+    size_t k;
+    size_t a_size;
+    size_t a_row_size;
+    size_t b_size;
+    size_t b_row_size;
     BroadcastingParameters(k, a_size, a_row_size, b_size, b_row_size);
     std::vector<std::vector<int>> b_copy(b_size, std::vector<int>(b_row_size));
     BroadcastingB(b_copy);
