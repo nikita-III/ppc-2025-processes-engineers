@@ -1,7 +1,7 @@
 #include "timofeev_n_ribbon_scheme_only_a/seq/include/ops_seq.hpp"
 
-#include <vector>
 #include <cstddef>
+#include <vector>
 
 #include "timofeev_n_ribbon_scheme_only_a/common/include/common.hpp"
 
@@ -14,16 +14,13 @@ TimofeevNRibbonSchemeOnlyASEQ::TimofeevNRibbonSchemeOnlyASEQ(const InType &in) {
 }
 
 bool TimofeevNRibbonSchemeOnlyASEQ::ValidationImpl() {
-  std::vector<std::vector<int>> *a = &(GetInput().first);
-  std::vector<std::vector<int>> *b = &(GetInput().second);
-  size_t n = a->size();
+  std::vector<std::vector<int>> &a = GetInput().first;
+  std::vector<std::vector<int>> &b = GetInput().second;
+  size_t n = a.size();
   size_t m2 = a[0].size();
-  size_t m1 = b->size();
+  size_t m1 = b.size();
   size_t k = b[0].size();
-  if (m2 != m1 || n == 0 || m1 == 0 || m2 == 0 || k == 0) {
-    return false;
-  }
-  return true;
+  return !(m2 != m1 || n == 0 || m1 == 0 || m2 == 0 || k == 0);
 }
 
 bool TimofeevNRibbonSchemeOnlyASEQ::PreProcessingImpl() {

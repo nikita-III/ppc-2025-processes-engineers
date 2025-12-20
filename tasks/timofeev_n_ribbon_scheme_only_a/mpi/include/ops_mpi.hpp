@@ -25,6 +25,8 @@ class TimofeevNRibbonSchemeOnlyAMPI : public BaseTask {
   static void CalculatingCPart(size_t &k, MatrixType &a_part, MatrixType &b_copy, MatrixType &c_part);
   static void BroadcastingParameters(size_t &a_size, size_t &a_row_size, size_t &b_size, size_t &b_row_size);
   static void BroadcastingB(MatrixType &b);
+  static int CalculatingCElementOneProcess(MatrixType &a, MatrixType &b, size_t &i, size_t &j);
+  static void CalculatingCOneProcess(MatrixType &a, MatrixType &b, MatrixType &c);
 };
 
 }  // namespace timofeev_n_ribbon_scheme_only_a

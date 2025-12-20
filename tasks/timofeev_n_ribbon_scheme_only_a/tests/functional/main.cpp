@@ -57,7 +57,6 @@ TEST_P(RibbonRunFuncTestsProcesses, MatmulFromPic) {
   ExecuteTest(GetParam());
 }
 
-// MatrixType zaglushka = std::vector<std::vector<int>>(3, std::vector<int>(3, 0));
 MatrixType v_1_2 = std::vector<std::vector<int>>(1, std::vector<int>(2, 1));
 MatrixType v_2_1 = std::vector<std::vector<int>>(2, std::vector<int>(1, 1));
 
@@ -74,6 +73,7 @@ MatrixType const_2 = {{2}};
 MatrixType const_3 = {{3}};
 MatrixType const_4 = {{4}};
 MatrixType const_5 = {{5}};
+MatrixType const_6 = {{6}};
 
 MatrixType o_1_1 = std::vector<std::vector<int>>(1, std::vector<int>(1, 0));
 
@@ -101,7 +101,7 @@ MatrixType m_4_3 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}};
 MatrixType m_3_3 = {{70, 80, 90}, {158, 184, 210}, {246, 288, 330}};
 
 // expected, out, in, string
-const std::array<TestType, 15> kTestParam = {
+const std::array<TestType, 16> kTestParam = {
     std::make_tuple(e_2_2, o_2_2, std::make_pair(e_2_2, e_2_2), "one_2_2"),
     std::make_tuple(seq_2_2, o_2_2, std::make_pair(e_2_2, seq_2_2), "seq_2_2"),
     std::make_tuple(seq_2_2, o_2_2, std::make_pair(seq_2_2, e_2_2), "seq_2_2_VV"),
@@ -116,7 +116,8 @@ const std::array<TestType, 15> kTestParam = {
     std::make_tuple(const_2, o_1_1, std::make_pair(v_1_2, v_2_1), "vectors_1_2_and_2_1"),
     std::make_tuple(const_3, o_1_1, std::make_pair(v_1_3, v_3_1), "vectors_1_3_and_3_1"),
     std::make_tuple(const_4, o_1_1, std::make_pair(v_1_4, v_4_1), "vectors_1_4_and_4_1"),
-    std::make_tuple(const_5, o_1_1, std::make_pair(v_1_5, v_5_1), "vectors_1_5_and_5_1")};
+    std::make_tuple(const_5, o_1_1, std::make_pair(v_1_5, v_5_1), "vectors_1_5_and_5_1"),
+    std::make_tuple(const_6, o_1_1, std::make_pair(const_2, const_3), "1_1_and_1_1")};
 
 const auto kTestTasksList = std::tuple_cat(ppc::util::AddFuncTask<TimofeevNRibbonSchemeOnlyAMPI, InType>(
                                                kTestParam, PPC_SETTINGS_timofeev_n_ribbon_scheme_only_a),
