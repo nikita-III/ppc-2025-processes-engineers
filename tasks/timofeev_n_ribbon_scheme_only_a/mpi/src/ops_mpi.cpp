@@ -22,7 +22,7 @@ bool TimofeevNRibbonSchemeOnlyAMPI::ValidationImpl() {
   size_t m2 = a[0].size();
   size_t m1 = b.size();
   size_t k = b[0].size();
-  return !(m2 == m1 && n != 0 && m1 != 0 && m2 != 0 && k != 0);
+  return (m2 == m1 && n != 0 && m1 != 0 && m2 != 0 && k != 0);
 }
 
 bool TimofeevNRibbonSchemeOnlyAMPI::PreProcessingImpl() {
@@ -64,8 +64,8 @@ void TimofeevNRibbonSchemeOnlyAMPI::ReceivingCParts(MatrixType &cmatr, int &size
   size_t i = 0;
   size_t iter = 0;
   std::vector<size_t> sizes(size - 1, 0);
-  for (size_t p = 0; p < sizes.size() - 1; p++) {
-    sizes[p] = (c_size >= k ? k : 0);
+  for (size_t p_ind = 0; p_ind < sizes.size() - 1; p_ind++) {
+    sizes[p_ind] = (c_size >= k ? k : 0);
     if (c_size >= k) {
       c_size -= k;
       iter++;

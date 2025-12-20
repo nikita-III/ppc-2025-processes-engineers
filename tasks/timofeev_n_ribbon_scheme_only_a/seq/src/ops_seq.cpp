@@ -20,7 +20,7 @@ bool TimofeevNRibbonSchemeOnlyASEQ::ValidationImpl() {
   size_t m2 = a[0].size();
   size_t m1 = b.size();
   size_t k = b[0].size();
-  return !(m2 == m1 && n != 0 && m1 != 0 && m2 != 0 && k != 0);
+  return (m2 == m1 && n != 0 && m1 != 0 && m2 != 0 && k != 0);
 }
 
 bool TimofeevNRibbonSchemeOnlyASEQ::PreProcessingImpl() {
