@@ -22,7 +22,7 @@ bool TimofeevNRibbonSchemeOnlyAMPI::ValidationImpl() {
   size_t m2 = a[0].size();
   size_t m1 = b.size();
   size_t k = b[0].size();
-  return !(m2 != m1 || n == 0 || m1 == 0 || m2 == 0 || k == 0);
+  return !(m2 == m1 && n != 0 && m1 != 0 && m2 != 0 && k != 0);
 }
 
 bool TimofeevNRibbonSchemeOnlyAMPI::PreProcessingImpl() {
@@ -38,8 +38,8 @@ void TimofeevNRibbonSchemeOnlyAMPI::SendingAParts(MatrixType &a, int &size, size
   size_t i = 0;
   size_t iter = 0;
   std::vector<size_t> sizes(size - 1, 0);
-  for (size_t p = 0; p < sizes.size() - 1; p++) {
-    sizes[p] = (a_size >= k ? k : 0);
+  for (size_t p_ind = 0; p_ind < sizes.size() - 1; p_ind++) {
+    sizes[p_ind] = (a_size >= k ? k : 0);
     if (a_size >= k) {
       a_size -= k;
       iter++;
@@ -75,7 +75,7 @@ void TimofeevNRibbonSchemeOnlyAMPI::ReceivingCParts(MatrixType &cmatr, int &size
   iter = 0;
   for (; i < sizes.size(); i++) {
     for (size_t j = 0; j < sizes[i]; j++) {
-      MPI_Recv(cmatr[iter].data(), static_cast<int>(b_row_size), MPI_INT, (i + 1), 1, MPI_COMM_WORLD,
+      MPI_Recv(cmatr[iter].data(), static_cast<int>(b_row_size), MPI_INT, static_cast<int>(i + 1), 1, MPI_COMM_WORLD,
                MPI_STATUS_IGNORE);
       iter++;
     }
@@ -166,11 +166,11 @@ bool TimofeevNRibbonSchemeOnlyAMPI::RunImpl() {
     }
     GetOutput() = cmatr;
   } else {
-    size_t k;
-    size_t a_size;
-    size_t a_row_size;
-    size_t b_size;
-    size_t b_row_size;
+    size_t k = 0;
+    size_t a_size = 0;
+    size_t a_row_size = 0;
+    size_t b_size = 0;
+    size_t b_row_size = 0;
     BroadcastingParameters(a_size, a_row_size, b_size, b_row_size);
     std::vector<std::vector<int>> b_copy(b_size, std::vector<int>(b_row_size));
     BroadcastingB(b_copy);
