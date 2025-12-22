@@ -176,202 +176,105 @@ void TimofeevNRadixMergeMPI::Sliyanie(std::vector<std::vector<int>> &Received, s
   }
 }
 
+void TimofeevNRadixMergeMPI::HandleTwoProcesses(std::vector<int> &In, std::vector<int> &Out) {
+  int yes = 1;
+  MPI_Send(&yes, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+  size_t SizeSize = In.size();
+  MPI_Send(&SizeSize, 1, MPI_UNSIGNED_LONG, 1, 0, MPI_COMM_WORLD);
+  MPI_Send(In.data(), static_cast<int>(SizeSize), MPI_INT, 1, 0, MPI_COMM_WORLD);
+  Out.resize(In.size());
+  MPI_Recv(Out.data(), static_cast<int>(SizeSize), MPI_INT, 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  size_t ConcdlusionSize = Out.size();
+  MPI_Bcast(&ConcdlusionSize, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
+  MPI_Bcast(Out.data(), static_cast<int>(ConcdlusionSize), MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Barrier(MPI_COMM_WORLD);
+}
+
+bool TimofeevNRadixMergeMPI::HandleZeroRank(std::vector<int> &In, std::vector<int> &Out, int &size) {
+  if (size == 2) {
+    HandleTwoProcesses(In, Out);
+    return true;
+  }
+  int ServedSize = size - 1;
+  size_t k = In.size() / static_cast<size_t>(ServedSize) + (In.size() % static_cast<size_t>(ServedSize) > 0 ? 1 : 0);
+  std::vector<int> SizesForProcesses(ServedSize, 0);
+  size_t ToSortSize = In.size();
+  for (size_t i = 0; i < SizesForProcesses.size() - 1; i += k) {
+    SizesForProcesses[i] = ((ToSortSize - k) > 0 ? k : 0);
+    ToSortSize -= (ToSortSize > k ? k : 0);
+  }
+  SizesForProcesses[ServedSize - 1] = ToSortSize;
+  for (int i = 0; i < ServedSize; i++) {
+    int yes = 1;
+    MPI_Send(&yes, 1, MPI_INT, i + 1, 0, MPI_COMM_WORLD);
+  }
+  for (int i = ServedSize; i < size - 1; i++) {
+    int no = 0;
+    MPI_Send(&no, 1, MPI_INT, i + 1, 0, MPI_COMM_WORLD);
+  }
+  int AccumulatedSize = 0;
+  for (size_t i = 0; i < SizesForProcesses.size(); i++) {
+    std::vector<int> BufVec(In.begin() + AccumulatedSize, In.begin() + AccumulatedSize + SizesForProcesses[i]);
+    size_t CurSize = BufVec.size();
+    MPI_Send(&CurSize, 1, MPI_UNSIGNED_LONG, static_cast<int>(i + 1), 0, MPI_COMM_WORLD);
+    MPI_Send(BufVec.data(), static_cast<int>(CurSize), MPI_INT, static_cast<int>(i + 1), 0, MPI_COMM_WORLD);
+    AccumulatedSize += SizesForProcesses[i];
+  }
+  std::vector<std::vector<int>> Received(SizesForProcesses.size(),std::vector<int>(1, 0));
+  for (size_t i = 0; i < SizesForProcesses.size(); i++) {
+    Received[i].resize(SizesForProcesses[i]);
+    MPI_Recv(Received[i].data(), SizesForProcesses[i], MPI_INT, static_cast<int>(i + 1), 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  }
+  if (Out.size() != In.size()) {
+    Out.resize(In.size());
+  }
+  for (size_t i = 0; i < In.size(); i++) {
+    Out[i] = In[i];
+  }
+  Sliyanie(Received, Out);
+  size_t ConcdlusionSize = Out.size();
+  MPI_Bcast(&ConcdlusionSize, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
+  MPI_Bcast(Out.data(), static_cast<int>(ConcdlusionSize), MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Barrier(MPI_COMM_WORLD);
+  return true;
+}
+
 bool TimofeevNRadixMergeMPI::RunImpl() {
   int rank = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   int size = 0;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
-  
   if (size == 1) {
-    // работа одним процессом
     GetOutput().resize(GetInput().size());
     for (size_t i = 0; i < GetInput().size(); i++) {
       GetOutput()[i] = GetInput()[i];
     }
     RadixMergeSort(GetOutput());
-    std::cout << "----------GETOUT-------- ";
-    for (size_t i = 0; i < GetOutput().size(); i++) {
-      std::cout << GetOutput()[i] << " ";
-    }
-    std::cout << "\n";
-
-    std::cout << rank <<  " конец\n";
-    //MPI_Barrier(MPI_COMM_WORLD);
     return true;
   }
-
-  // количество фактически работающих процессов - степень двойки
-  // ибо проще строить бинарное дерево
-  
   if (rank == 0) {
-    if (GetInput().empty()) {
-      return false;
-    }
-    if (size == 2) {
-      // работа только 1-м процессом
-      int yes = 1;
-      MPI_Send(&yes, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
-      size_t SizeSize = GetInput().size();
-      MPI_Send(&SizeSize, 1, MPI_UNSIGNED_LONG, 1, 0, MPI_COMM_WORLD);
-      MPI_Send(GetInput().data(), static_cast<int>(SizeSize), MPI_INT, 1, 0, MPI_COMM_WORLD);
-      GetOutput().resize(GetInput().size());
-      MPI_Recv(GetOutput().data(), static_cast<int>(SizeSize), MPI_INT, 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-      std::cout << "----------GETOUT-------- ";
-      for (size_t i = 0; i < GetOutput().size(); i++) {
-        std::cout << GetOutput()[i] << " ";
-      }
-      std::cout << "\n";
-
-      size_t ConcdlusionSize = GetOutput().size();
-      MPI_Bcast(&ConcdlusionSize, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
-      MPI_Bcast(GetOutput().data(), static_cast<int>(ConcdlusionSize), MPI_INT, 0, MPI_COMM_WORLD);
-      std::cout << rank <<  " конец\n";
-      MPI_Barrier(MPI_COMM_WORLD);
-      return true;
-    }
-    int ServedSize = size - 1;
-    std::cout << rank << " " << ServedSize <<  " ServedSize получилось вот таким\n";
-
-
-    // Отдаём, принимаем, отдаём, принимаем, ...
-    // Каждый раз создаём контейнеры по размеру того, что отдали,
-    // один раз рассылаем всем по одному кусочку, потом по два побольше, потом ещё бОльшие...
-    // Уже обработаки самые маленькие кусочки, поэтому берём только часть процессов
-    //std::vector<int> ToSort = GetInput();
-    size_t k = GetInput().size() / static_cast<size_t>(ServedSize) + (GetInput().size() % static_cast<size_t>(ServedSize) > 0 ? 1 : 0);
-    std::cout << rank << " " << k <<  " k получилось вот таким\n";
-    std::vector<int> SizesForProcesses(ServedSize, 0);
-    size_t ToSortSize = GetInput().size();
-    for (size_t i = 0; i < SizesForProcesses.size() - 1; i += k) {
-      SizesForProcesses[i] = ((ToSortSize - k) > 0 ? k : 0);
-      std::cout << rank << " " << SizesForProcesses[i] << " при i = " << i <<  " SizesForProcesses[i] получилось вот таким\n";
-      ToSortSize -= (ToSortSize > k ? k : 0);
-    }
-    std::cout << rank << " " << ToSortSize <<  " ToSortSize получилось вот таким\n";
-    SizesForProcesses[ServedSize - 1] = ToSortSize;
-    std::cout << rank << " процессу с номером " << (ServedSize) <<  " отдали ToSortSize\n";
-    std::cout << rank <<  " оповещаем, надо ли вооще работать\n";
-    for (int i = 0; i < ServedSize; i++) {
-      int yes = 1;
-      MPI_Send(&yes, 1, MPI_INT, i + 1, 0, MPI_COMM_WORLD);
-      std::cout << rank << " говорит: " << i + 1 <<  " надо работать\n";
-    }
-    std::cout << rank <<  " тем, кого мы отбросили, не надо\n";
-    for (int i = ServedSize; i < size - 1; i++) {
-      int no = 0;
-      MPI_Send(&no, 1, MPI_INT, i + 1, 0, MPI_COMM_WORLD);
-      std::cout << rank << " говорит: " << i + 1 <<  " не надо работать\n";
-    }
-    std::cout << rank <<  " рассылаем самые маленькие\n";
-    int AccumulatedSize = 0;
-    // оформить в функцию - не знаю, надо ли
-    for (size_t i = 0; i < SizesForProcesses.size(); i++) {
-      std::vector<int> BufVec(GetInput().begin() + AccumulatedSize, GetInput().begin() + AccumulatedSize + SizesForProcesses[i]);
-      size_t CurSize = BufVec.size();
-      MPI_Send(&CurSize, 1, MPI_UNSIGNED_LONG, static_cast<int>(i + 1), 0, MPI_COMM_WORLD);
-      //if (CurSize > 0) {
-      MPI_Send(BufVec.data(), static_cast<int>(CurSize), MPI_INT, static_cast<int>(i + 1), 0, MPI_COMM_WORLD);
-      AccumulatedSize += SizesForProcesses[i];
-      //}
-    }
-    std::cout << rank <<  " принимаем самые маленькие\n";
-    // оформить в функцию?
-    std::vector<std::vector<int>> Received(SizesForProcesses.size(),std::vector<int>(1, 0));
-    for (size_t i = 0; i < SizesForProcesses.size(); i++) {
-      std::cout << rank << " " << SizesForProcesses[i] <<  " = SizesForProcesses[i]\n";
-      Received[i].resize(SizesForProcesses[i]);
-      MPI_Recv(Received[i].data(), SizesForProcesses[i], MPI_INT, static_cast<int>(i + 1), 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-      //}
-    }
-
-    //std::cout << rank <<  " день сурка\n";
-    if (GetOutput().size() != GetInput().size()) {
-      GetOutput().resize(GetInput().size());
-    }
-    for (size_t i = 0; i < GetInput().size(); i++) {
-      GetOutput()[i] = GetInput()[i];
-    }
-    // здесь слияние
-    Sliyanie(Received, GetOutput());
-    
-    std::cout << "----------GETOUT-------- ";
-    for (size_t i = 0; i < GetOutput().size(); i++) {
-      std::cout << GetOutput()[i] << " ";
-    }
-    std::cout << "\n";
-
-    size_t ConcdlusionSize = GetOutput().size();
-    MPI_Bcast(&ConcdlusionSize, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
-    MPI_Bcast(GetOutput().data(), static_cast<int>(ConcdlusionSize), MPI_INT, 0, MPI_COMM_WORLD);
-    std::cout << rank <<  " конец\n";
+    return HandleZeroRank(GetInput(), GetOutput(), size);
   } else {
-    // Сначала забираем маленькие кусочки, потом - цикл:
-    // пока приходит оповещение о том, что нам надо ещё кусочек обработать (в конце предыдущего приходит),
-    // мы принимаем размер следующего кусочка, и обрабатываем его
     int ShouldIWork;
     MPI_Recv(&ShouldIWork, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     if (!ShouldIWork) {
-      // приём результата через Bcast
       size_t ConcdlusionSize;
       MPI_Bcast(&ConcdlusionSize, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
       GetOutput().resize(ConcdlusionSize);
       MPI_Bcast(GetOutput().data(), static_cast<int>(ConcdlusionSize), MPI_INT, 0, MPI_COMM_WORLD);
-      std::cout << rank <<  " уходим с работы домой\n";
       MPI_Barrier(MPI_COMM_WORLD);
       return true;
     }
-    std::cout << rank <<  " я сегодня работаю с MPI_Init(...) до MPI_Finalize()\n";
-    // if (size == 2) {
-    //   std::cout << rank <<  " ситуация, когда нужно просто принять от 0-го всё, ему всё отдать и потом принять результат\n";
-    //   std::cout << rank <<  " мы принимаем размер кусочка, и обрабатываем его\n";
-    //   size_t CurSize;
-    //   MPI_Recv(&CurSize, 1, MPI_UNSIGNED_LONG, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    //   std::vector<int> BufVec(CurSize);
-    //   MPI_Recv(BufVec.data(), static_cast<int>(CurSize), MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    //   std::cout << rank <<  " сортировка\n";
-    //   RadixMergeSort(BufVec);
-    //   std::cout << rank << " У этого процесса вот такой вектор: ";
-    //   for (size_t i = 0; i < BufVec.size(); i++) {
-    //     std::cout << BufVec[i] << " ";
-    //   }
-    //   std::cout << "\n";
-
-    //   std::cout << rank <<  " отдаём самые маленькие\n";
-    //   std::cout << rank << " " << CurSize <<   " =  CurSize\n";
-    //   MPI_Send(BufVec.data(), static_cast<int>(CurSize), MPI_INT, 0, 0, MPI_COMM_WORLD);
-      
-    //   std::cout << rank <<  " мы принимаем размер финального кусочка, и принимаем его через BCast\n";
-    //   size_t ConcdlusionSize;
-    //   MPI_Bcast(&ConcdlusionSize, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
-    //   GetOutput().resize(ConcdlusionSize);
-    //   MPI_Bcast(GetOutput().data(), static_cast<int>(ConcdlusionSize), MPI_INT, 0, MPI_COMM_WORLD);
-    //   std::cout << rank <<  " конец\n";
-    //   MPI_Barrier(MPI_COMM_WORLD);
-    //   return true;
-    // }
-    std::cout << rank <<  " мы принимаем размер кусочка, и обрабатываем его\n";
     size_t CurSize;
     MPI_Recv(&CurSize, 1, MPI_UNSIGNED_LONG, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     std::vector<int> BufVec(CurSize);
     MPI_Recv(BufVec.data(), static_cast<int>(CurSize), MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    std::cout << rank <<  " сортировка\n";
     RadixMergeSort(BufVec);
-    std::cout << rank << " У этого процесса вот такой вектор: ";
-    for (size_t i = 0; i < BufVec.size(); i++) {
-      std::cout << BufVec[i] << " ";
-    }
-    std::cout << "\n";
-
-    std::cout << rank <<  " отдаём самые маленькие\n";
-    std::cout << rank << " " << CurSize <<   " =  CurSize\n";
     MPI_Send(BufVec.data(), static_cast<int>(CurSize), MPI_INT, 0, 0, MPI_COMM_WORLD);
-    
-    std::cout << rank <<  " мы принимаем размер финального кусочка, и принимаем его через BCast\n";
     size_t ConcdlusionSize;
     MPI_Bcast(&ConcdlusionSize, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
     GetOutput().resize(ConcdlusionSize);
     MPI_Bcast(GetOutput().data(), static_cast<int>(ConcdlusionSize), MPI_INT, 0, MPI_COMM_WORLD);
-    std::cout << rank <<  " конец\n";
   }
   MPI_Barrier(MPI_COMM_WORLD);
   return true;

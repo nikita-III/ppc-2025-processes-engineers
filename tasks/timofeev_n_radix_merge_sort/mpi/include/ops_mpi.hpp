@@ -29,6 +29,8 @@ class TimofeevNRadixMergeMPI : public BaseTask {
   void RadixMergeBucketHelpingFunction(std::vector<int> &Part, int Digit);
   void SliyanieHelp(std::vector<std::vector<int>> &Received, std::vector<int> &Indexes, std::vector<int> &Out, int &i);
   void Sliyanie(std::vector<std::vector<int>> &Received, std::vector<int> &Out);
+  void HandleTwoProcesses(std::vector<int> &In, std::vector<int> &Out);
+  bool HandleZeroRank(std::vector<int> &In, std::vector<int> &Out, int &size);
 };
 
 }  // namespace timofeev_n_radix_merge_sort
