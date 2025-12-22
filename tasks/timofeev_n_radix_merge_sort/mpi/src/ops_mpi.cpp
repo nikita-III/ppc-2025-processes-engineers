@@ -4,6 +4,8 @@
 
 #include <climits>
 #include <cmath>
+#include <cstddef>
+#include <ranges>
 #include <vector>
 
 #include "timofeev_n_radix_merge_sort/common/include/common.hpp"
@@ -44,9 +46,7 @@ int TimofeevNRadixMergeMPI::GetMaxDigits(const std::vector<int> &arr) {
   int max_abs = 0;
   for (int num : arr) {
     int abs_num = std::abs(num);
-    if (abs_num > max_abs) {
-      max_abs = abs_num;
-    }
+    max_abs = std::max(abs_num, max_abs);
   }
 
   int digits = 0;
@@ -174,7 +174,7 @@ bool TimofeevNRadixMergeMPI::HandleZeroRank(std::vector<int> &in, std::vector<in
   std::vector<int> sizes_for_processes(served_size, 0);
   size_t to_sort_size = in.size();
   for (size_t i = 0; i < sizes_for_processes.size() - 1; i += k) {
-    sizes_for_processes[i] = ((to_sort_size - k) > 0 ? k : 0);
+    sizes_for_processes[i] = static_cast<int>((to_sort_size - k > 0 ? k : 0));
     to_sort_size -= static_cast<int>((to_sort_size > k ? k : 0));
   }
   sizes_for_processes[served_size - 1] = static_cast<int>(to_sort_size);
@@ -229,28 +229,27 @@ bool TimofeevNRadixMergeMPI::RunImpl() {
   }
   if (rank == 0) {
     return HandleZeroRank(GetInput(), GetOutput(), size);
-  } else {
-    int should_i_work = 0;
-    MPI_Recv(&should_i_work, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    if (should_i_work == 0) {
-      size_t concdlusion_size = 0;
-      MPI_Bcast(&concdlusion_size, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
-      GetOutput().resize(concdlusion_size);
-      MPI_Bcast(GetOutput().data(), static_cast<int>(concdlusion_size), MPI_INT, 0, MPI_COMM_WORLD);
-      MPI_Barrier(MPI_COMM_WORLD);
-      return true;
-    }
-    size_t cur_size = 0;
-    MPI_Recv(&cur_size, 1, MPI_UNSIGNED_LONG, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    std::vector<int> buf_vec(cur_size);
-    MPI_Recv(buf_vec.data(), static_cast<int>(cur_size), MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    RadixMergeSort(buf_vec);
-    MPI_Send(buf_vec.data(), static_cast<int>(cur_size), MPI_INT, 0, 0, MPI_COMM_WORLD);
+  }
+  int should_i_work = 0;
+  MPI_Recv(&should_i_work, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  if (should_i_work == 0) {
     size_t concdlusion_size = 0;
     MPI_Bcast(&concdlusion_size, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
     GetOutput().resize(concdlusion_size);
     MPI_Bcast(GetOutput().data(), static_cast<int>(concdlusion_size), MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
+    return true;
   }
+  size_t cur_size = 0;
+  MPI_Recv(&cur_size, 1, MPI_UNSIGNED_LONG, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  std::vector<int> buf_vec(cur_size);
+  MPI_Recv(buf_vec.data(), static_cast<int>(cur_size), MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  RadixMergeSort(buf_vec);
+  MPI_Send(buf_vec.data(), static_cast<int>(cur_size), MPI_INT, 0, 0, MPI_COMM_WORLD);
+  size_t concdlusion_size = 0;
+  MPI_Bcast(&concdlusion_size, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
+  GetOutput().resize(concdlusion_size);
+  MPI_Bcast(GetOutput().data(), static_cast<int>(concdlusion_size), MPI_INT, 0, MPI_COMM_WORLD);
   MPI_Barrier(MPI_COMM_WORLD);
   return true;
 }

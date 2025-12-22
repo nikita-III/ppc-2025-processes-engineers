@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cstddef>
+#include <ranges>
 #include <vector>
 
 #include "timofeev_n_radix_merge_sort/common/include/common.hpp"
@@ -42,9 +43,7 @@ int TimofeevNRadixMergeSEQ::GetMaxDigits(const std::vector<int> &arr) {
   int max_abs = 0;
   for (int num : arr) {
     int abs_num = std::abs(num);
-    if (abs_num > max_abs) {
-      max_abs = abs_num;
-    }
+    max_abs = std::max(abs_num, max_abs);
   }
 
   int digits = 0;

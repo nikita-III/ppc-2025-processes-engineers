@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <utility>
 #include <vector>
 
 #include "timofeev_n_radix_merge_sort/common/include/common.hpp"
