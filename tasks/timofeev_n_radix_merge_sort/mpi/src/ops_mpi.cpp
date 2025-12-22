@@ -95,6 +95,9 @@ bool TimofeevNRadixMergeMPI::RunImpl() {
   // ибо проще строить бинарное дерево
   
   if (rank == 0) {
+    if (GetInput().empty()) {
+      return false;
+    }
     if (size == 2) {
       // работа только 1-м процессом
 
@@ -153,7 +156,7 @@ bool TimofeevNRadixMergeMPI::RunImpl() {
     }
     std::cout << rank <<  " принимаем самые маленькие\n";
     // оформить в функцию?
-    std::vector<std::vector<int>> Received(SizesForProcesses.size());
+    std::vector<std::vector<int>> Received(SizesForProcesses.size(),std::vector<int>(1, 0));
     for (size_t i = 0; i < SizesForProcesses.size(); i++) {
       std::cout << rank << " " << SizesForProcesses[i] <<  " = SizesForProcesses[i]\n";
       Received[i].resize(SizesForProcesses[i]);
@@ -166,10 +169,11 @@ bool TimofeevNRadixMergeMPI::RunImpl() {
     //std::cout << rank <<  " день сурка\n";
     // здесь слияние
     
-    Received[0].resize(GetInput().size());// заглушка
-    Received[0] = GetInput();// заглушка
+    //Received[0].resize(GetInput().size());// заглушка
+    //Received[0] = ToSort;// заглушка
+    std::copy(ToSort.begin(), ToSort.end(), std::back_inserter(GetOutput()));
 
-    GetOutput() = Received[0];
+    //GetOutput() = Received[0];
     size_t ConcdlusionSize = GetOutput().size();
     MPI_Bcast(&ConcdlusionSize, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
     MPI_Bcast(GetOutput().data(), static_cast<int>(ConcdlusionSize), MPI_INT, 0, MPI_COMM_WORLD);
@@ -182,7 +186,10 @@ bool TimofeevNRadixMergeMPI::RunImpl() {
     MPI_Recv(&ShouldIWork, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     if (!ShouldIWork) {
       // приём результата через Bcast
-
+      size_t ConcdlusionSize;
+      MPI_Bcast(&ConcdlusionSize, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
+      GetOutput().resize(ConcdlusionSize);
+      MPI_Bcast(GetOutput().data(), static_cast<int>(ConcdlusionSize), MPI_INT, 0, MPI_COMM_WORLD);
       std::cout << rank <<  " уходим с работы домой\n";
       MPI_Barrier(MPI_COMM_WORLD);
       return true;
@@ -209,6 +216,7 @@ bool TimofeevNRadixMergeMPI::RunImpl() {
     std::cout << rank <<  " мы принимаем размер финального кусочка, и принимаем его через BCast\n";
     size_t ConcdlusionSize;
     MPI_Bcast(&ConcdlusionSize, 1, MPI_UNSIGNED_LONG, 0, MPI_COMM_WORLD);
+    GetOutput().resize(ConcdlusionSize);
     MPI_Bcast(GetOutput().data(), static_cast<int>(ConcdlusionSize), MPI_INT, 0, MPI_COMM_WORLD);
     std::cout << rank <<  " конец\n";
   }
