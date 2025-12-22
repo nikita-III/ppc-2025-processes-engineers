@@ -54,7 +54,6 @@ int TimofeevNRadixMergeMPI::GetMaxDigits(const std::vector<int>& arr) {
     digits++;
     MaxAbs /= 10;
   }
-  std::cout << "-----GetMaxDigits------" << (digits == 0 ? 1 : digits) << "\n";
   return digits == 0 ? 1 : digits; // минимум 1 разряд
 }
 
@@ -68,16 +67,6 @@ void TimofeevNRadixMergeMPI::SplitPosNeg(const std::vector<int>& Arr,
        Positive.push_back(num);
     }
   }
-  std::cout << "----------SplitPosNeg-------- ";
-  for (size_t i = 0; i < Negative.size(); i++) {
-    std::cout << Negative[i] << " ";
-  }
-  std::cout << "\n";
-  std::cout << "----------SplitPosNeg-------- ";
-  for (size_t i = 0; i < Positive.size(); i++) {
-    std::cout << Positive[i] << " ";
-  }
-  std::cout << "\n";
 }
 
 void TimofeevNRadixMergeMPI::RadixMergeBucketHelpingFunction(std::vector<int> &Part, int Digit) {
@@ -94,12 +83,6 @@ void TimofeevNRadixMergeMPI::RadixMergeBucketHelpingFunction(std::vector<int> &P
       Part.push_back(num);
     }
   }
-
-  std::cout << "----------RadixMergeBucketHelpingFunction-------- ";
-  for (size_t i = 0; i < Part.size(); i++) {
-    std::cout << Part[i] << " ";
-  }
-  std::cout << "\n";
 }
 
 void TimofeevNRadixMergeMPI::RadixMergeSort(std::vector<int> &Part) {
@@ -131,17 +114,6 @@ void TimofeevNRadixMergeMPI::RadixMergeSort(std::vector<int> &Part) {
   // А теперь сливаем всё в один вектор, причём негативные - задом наперёд,
   // позитивные - как было.
   // Вот так.
-
-  std::cout << "----------Negative-------- ";
-  for (size_t i = 0; i < Negative.size(); i++) {
-    std::cout << Negative[i] << " ";
-  }
-  std::cout << "\n";
-  std::cout << "----------Positive-------- ";
-  for (size_t i = 0; i < Positive.size(); i++) {
-    std::cout << Positive[i] << " ";
-  }
-  std::cout << "\n";
   if (!Negative.empty()) {
     int j = 0;
     for (auto i = Negative.rbegin(); i != Negative.rend(); i++) {

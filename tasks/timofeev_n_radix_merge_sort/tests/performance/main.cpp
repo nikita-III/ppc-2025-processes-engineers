@@ -11,7 +11,7 @@
 namespace timofeev_n_radix_merge_sort {
 
 class RadixMergeRunPerfTestProcesses : public ppc::util::BaseRunPerfTests<InType, OutType> {
-  const int kCount_ = 1000;
+  const int kCount_ = 10000000;
   OutType expected_data_;
   InType input_data_;
 

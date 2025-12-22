@@ -21,24 +21,13 @@ class TimofeevNRadixMergeSEQ : public BaseTask {
   bool RunImpl() override;
   bool PostProcessingImpl() override;
   
-  // Вспомогательные функции для поразрядной сортировки слиянием
-  int getDigit(int num, int digit);
-  int getMaxDigits(const std::vector<int>& arr);
-  void separateNegativesAndPositives(const std::vector<int>& arr,
-                                           std::vector<int>& negatives,
-                                           std::vector<int>& positives);
-  void distributeToBuckets(const std::vector<int>& arr, int digit,
-                                 std::vector<std::vector<int>>& buckets);
-  std::vector<int> collectFromBuckets(const std::vector<std::vector<int>>& buckets);
-  std::vector<int> radixSortNonNegative(const std::vector<int>& arr);
-  std::vector<int> radixSortWithNegatives(const std::vector<int>& arr);
-  std::vector<int> mergeTwoArrays(const std::vector<int>& left,
-                                        const std::vector<int>& right);
-  std::vector<int> radixMergeSortRecursive(const std::vector<int>& arr);
-  size_t calculateNextPowerOfTwo(size_t n);
-  std::vector<int> padArrayToPowerOfTwo(const std::vector<int>& arr);
-  std::vector<int> removeAddedZeros(const std::vector<int>& sorted,
-                                          size_t originalSize);
+  void RadixMergeSort(std::vector<int> &part);
+  int GetDigit(int num, int digit);
+  int GetMaxDigits(const std::vector<int>& arr);
+  void SplitPosNeg(const std::vector<int>& Arr, 
+                  std::vector<int>& Negative, 
+                  std::vector<int>& Positive);
+  void RadixMergeBucketHelpingFunction(std::vector<int> &Part, int Digit);
 };
 
 }  // namespace timofeev_n_radix_merge_sort

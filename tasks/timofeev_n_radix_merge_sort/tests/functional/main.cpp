@@ -35,10 +35,8 @@ class RadixMergeRunFuncTestsProcesses : public ppc::util::BaseRunFuncTests<InTyp
     }
     bool yesyes = true;
     for (size_t i = 0; i < output_data.size(); i++) {
-      std::cout << output_data[i] << " ";
       yesyes &= output_data[i] == expected_data_[i];
     }
-    std::cout << "\n";
     return yesyes;
   }
 
