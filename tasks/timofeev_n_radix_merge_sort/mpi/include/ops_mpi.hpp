@@ -20,11 +20,15 @@ class TimofeevNRadixMergeMPI : public BaseTask {
   bool PreProcessingImpl() override;
   bool RunImpl() override;
   bool PostProcessingImpl() override;
-  std::vector<int> statusQuo;
-  int DecideIfProceeding(std::vector<std::vector<int>> Receiving, size_t ConclusionSize);
   void RadixMergeSort(std::vector<int> &part);
-  void DistributeReceiveParts(std::vector<int> &statusQuo, std::vector<std::vector<int>> &Received, int Shag);
-  int GetPervTwoPower(int size);
+  int GetDigit(int num, int digit);
+  int GetMaxDigits(const std::vector<int>& arr);
+  void SplitPosNeg(const std::vector<int>& Arr, 
+                  std::vector<int>& Negative, 
+                  std::vector<int>& Positive);
+  void RadixMergeBucketHelpingFunction(std::vector<int> &Part, int Digit);
+  void SliyanieHelp(std::vector<std::vector<int>> &Received, std::vector<int> &Indexes, std::vector<int> &Out, int &i);
+  void Sliyanie(std::vector<std::vector<int>> &Received, std::vector<int> &Out);
 };
 
 }  // namespace timofeev_n_radix_merge_sort

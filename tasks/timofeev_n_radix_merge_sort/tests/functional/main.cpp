@@ -92,33 +92,38 @@ std::vector<int> ReverseNeg2 = {-3, -4};
 std::vector<int> SortedNeg1 = {-4};
 std::vector<int> ReverseNeg1 = {-4};
 
+std::vector<int> SortedTHEGRANDFINAL = {-4, -3, -2, -1, 0, 1, 2, 3, 4, 5};
+std::vector<int> ReverseTHEGRANDFINAL = {5, 4, 3, 2, 1, 0, -1, -2, -3, -4};
+std::vector<int> ZerosTHEGRANDFINAL(10);
+
 // expected, out, in, string
 
-// const std::array<TestType, 10> kTestParam = {
-//     std::make_tuple(Sorted5, Zeros5, Reverse5, "first"),
-//     std::make_tuple(Sorted4, Zeros4, Reverse4, "second"),
-//     std::make_tuple(Sorted3, Zeros3, Reverse3, "third"),
-//     std::make_tuple(Sorted2, Zeros2, Reverse2, "fourth"),
-//     std::make_tuple(Sorted1, Zeros1, Reverse1, "fifth"),
-//     std::make_tuple(SortedNeg5, Zeros5, ReverseNeg5, "firstNeg"),
-//     std::make_tuple(SortedNeg4, Zeros4, ReverseNeg4, "secondNeg"),
-//     std::make_tuple(SortedNeg3, Zeros3, ReverseNeg3, "thirdNeg"),
-//     std::make_tuple(SortedNeg2, Zeros2, ReverseNeg2, "fourthNeg"),
-//     std::make_tuple(SortedNeg1, Zeros1, ReverseNeg1, "fifthNeg")
-//     };
-
-const std::array<TestType, 10> kTestParam = {
-    std::make_tuple(Reverse5, Zeros5, Reverse5, "first"),
-    std::make_tuple(Reverse4, Zeros4, Reverse4, "second"),
-    std::make_tuple(Reverse3, Zeros3, Reverse3, "third"),
-    std::make_tuple(Reverse2, Zeros2, Reverse2, "fourth"),
-    std::make_tuple(Reverse1, Zeros1, Reverse1, "fifth"),
-    std::make_tuple(ReverseNeg5, Zeros5, ReverseNeg5, "firstNeg"),
-    std::make_tuple(ReverseNeg4, Zeros4, ReverseNeg4, "secondNeg"),
-    std::make_tuple(ReverseNeg3, Zeros3, ReverseNeg3, "thirdNeg"),
-    std::make_tuple(ReverseNeg2, Zeros2, ReverseNeg2, "fourthNeg"),
-    std::make_tuple(ReverseNeg1, Zeros1, ReverseNeg1, "fifthNeg")
+const std::array<TestType, 11> kTestParam = {
+    std::make_tuple(Sorted5, Zeros5, Reverse5, "first"),
+    std::make_tuple(Sorted4, Zeros4, Reverse4, "second"),
+    std::make_tuple(Sorted3, Zeros3, Reverse3, "third"),
+    std::make_tuple(Sorted2, Zeros2, Reverse2, "fourth"),
+    std::make_tuple(Sorted1, Zeros1, Reverse1, "fifth"),
+    std::make_tuple(SortedNeg5, Zeros5, ReverseNeg5, "firstNeg"),
+    std::make_tuple(SortedNeg4, Zeros4, ReverseNeg4, "secondNeg"),
+    std::make_tuple(SortedNeg3, Zeros3, ReverseNeg3, "thirdNeg"),
+    std::make_tuple(SortedNeg2, Zeros2, ReverseNeg2, "fourthNeg"),
+    std::make_tuple(SortedNeg1, Zeros1, ReverseNeg1, "fifthNeg"),
+    std::make_tuple(SortedTHEGRANDFINAL, ZerosTHEGRANDFINAL, ReverseTHEGRANDFINAL, "THEGRANDFINAL")
     };
+
+// const std::array<TestType, 10> kTestParam = {
+//     std::make_tuple(Reverse5, Zeros5, Reverse5, "first"),
+//     std::make_tuple(Reverse4, Zeros4, Reverse4, "second"),
+//     std::make_tuple(Reverse3, Zeros3, Reverse3, "third"),
+//     std::make_tuple(Reverse2, Zeros2, Reverse2, "fourth"),
+//     std::make_tuple(Reverse1, Zeros1, Reverse1, "fifth"),
+//     std::make_tuple(ReverseNeg5, Zeros5, ReverseNeg5, "firstNeg"),
+//     std::make_tuple(ReverseNeg4, Zeros4, ReverseNeg4, "secondNeg"),
+//     std::make_tuple(ReverseNeg3, Zeros3, ReverseNeg3, "thirdNeg"),
+//     std::make_tuple(ReverseNeg2, Zeros2, ReverseNeg2, "fourthNeg"),
+//     std::make_tuple(ReverseNeg1, Zeros1, ReverseNeg1, "fifthNeg")
+//     };
 
 const auto kTestTasksList = std::tuple_cat(ppc::util::AddFuncTask<TimofeevNRadixMergeMPI, InType>(
                                                kTestParam, PPC_SETTINGS_timofeev_n_radix_merge_sort),
