@@ -1,5 +1,6 @@
 #include "timofeev_n_radix_merge_sort/seq/include/ops_seq.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <ranges>
