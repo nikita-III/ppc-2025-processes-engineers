@@ -1,9 +1,9 @@
 #include "timofeev_n_radix_merge_sort/mpi/include/ops_mpi.hpp"
 
 #include <mpi.h>
-#include <climits>
 
 #include <algorithm>
+#include <climits>
 #include <cmath>
 #include <cstddef>
 #include <vector>
@@ -28,18 +28,20 @@ bool TimofeevNRadixMergeMPI::PreProcessingImpl() {
 
 int TimofeevNRadixMergeMPI::GetDigit(int num, int digit) {
   int absNum = std::abs(num);
-  
+
   // потому что без использования возведения в степень (как функции)
   for (int i = 0; i < digit; i++) {
-      absNum /= 10;
+    absNum /= 10;
   }
-  
+
   return absNum % 10;
 }
 
-int TimofeevNRadixMergeMPI::GetMaxDigits(const std::vector<int>& arr) {
-  if (arr.empty()) return 0;
-  
+int TimofeevNRadixMergeMPI::GetMaxDigits(const std::vector<int> &arr) {
+  if (arr.empty()) {
+    return 0;
+  }
+
   // Находим максимальное по модулю число
   int MaxAbs = 0;
   for (int num : arr) {
@@ -48,23 +50,22 @@ int TimofeevNRadixMergeMPI::GetMaxDigits(const std::vector<int>& arr) {
       MaxAbs = AbsNum;
     }
   }
-  
+
   int digits = 0;
   while (MaxAbs > 0) {
     digits++;
     MaxAbs /= 10;
   }
-  return digits == 0 ? 1 : digits; // минимум 1 разряд
+  return digits == 0 ? 1 : digits;  // минимум 1 разряд
 }
 
-void TimofeevNRadixMergeMPI::SplitPosNeg(const std::vector<int>& Arr, 
-                                         std::vector<int>& Negative, 
-                                         std::vector<int>& Positive) {
+void TimofeevNRadixMergeMPI::SplitPosNeg(const std::vector<int> &Arr, std::vector<int> &Negative,
+                                         std::vector<int> &Positive) {
   for (int num : Arr) {
     if (num < 0) {
       Negative.push_back(-num);
     } else {
-       Positive.push_back(num);
+      Positive.push_back(num);
     }
   }
 }
@@ -75,7 +76,7 @@ void TimofeevNRadixMergeMPI::RadixMergeBucketHelpingFunction(std::vector<int> &P
     int d = GetDigit(num, Digit);
     Buckets[d].push_back(num);
   }
-  
+
   // Собираем числа обратно в вектор
   Part.clear();
   for (int i = 0; i < 10; i++) {
@@ -89,24 +90,24 @@ void TimofeevNRadixMergeMPI::RadixMergeSort(std::vector<int> &Part) {
   if (Part.size() <= 1) {
     return;
   }
-  
+
   // Разделяем на отрицательные и положительные числа
   std::vector<int> Negative, Positive;
   SplitPosNeg(Part, Negative, Positive);
-  
+
   // Сортируем отрицательные числа (по модулю)
   if (!Negative.empty()) {
     int MaxDigitsNeg = GetMaxDigits(Negative);
-    
+
     for (int digit = 0; digit < MaxDigitsNeg; digit++) {
       RadixMergeBucketHelpingFunction(Negative, digit);
     }
   }
-  
+
   // Сортируем положительные числа
   if (!Positive.empty()) {
     int MaxDigitsPos = GetMaxDigits(Positive);
-    
+
     for (int digit = 0; digit < MaxDigitsPos; digit++) {
       RadixMergeBucketHelpingFunction(Positive, digit);
     }
@@ -128,7 +129,8 @@ void TimofeevNRadixMergeMPI::RadixMergeSort(std::vector<int> &Part) {
   }
 }
 
-void TimofeevNRadixMergeMPI::SliyanieHelp(std::vector<std::vector<int>> &Received, std::vector<int> &Indexes, std::vector<int> &Out, int &i) {
+void TimofeevNRadixMergeMPI::SliyanieHelp(std::vector<std::vector<int>> &Received, std::vector<int> &Indexes,
+                                          std::vector<int> &Out, int &i) {
   int Smales = INT_MAX;
   int IndexSmales = 0;
   for (size_t j = 0; j < Received.size(); j++) {
@@ -192,10 +194,11 @@ bool TimofeevNRadixMergeMPI::HandleZeroRank(std::vector<int> &In, std::vector<in
     MPI_Send(BufVec.data(), static_cast<int>(CurSize), MPI_INT, static_cast<int>(i + 1), 0, MPI_COMM_WORLD);
     AccumulatedSize += SizesForProcesses[i];
   }
-  std::vector<std::vector<int>> Received(SizesForProcesses.size(),std::vector<int>(1, 0));
+  std::vector<std::vector<int>> Received(SizesForProcesses.size(), std::vector<int>(1, 0));
   for (size_t i = 0; i < SizesForProcesses.size(); i++) {
     Received[i].resize(SizesForProcesses[i]);
-    MPI_Recv(Received[i].data(), SizesForProcesses[i], MPI_INT, static_cast<int>(i + 1), 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Recv(Received[i].data(), SizesForProcesses[i], MPI_INT, static_cast<int>(i + 1), 0, MPI_COMM_WORLD,
+             MPI_STATUS_IGNORE);
   }
   if (Out.size() != In.size()) {
     Out.resize(In.size());

@@ -22,10 +22,8 @@ class TimofeevNRadixMergeMPI : public BaseTask {
   bool PostProcessingImpl() override;
   void RadixMergeSort(std::vector<int> &part);
   int GetDigit(int num, int digit);
-  int GetMaxDigits(const std::vector<int>& arr);
-  void SplitPosNeg(const std::vector<int>& Arr, 
-                  std::vector<int>& Negative, 
-                  std::vector<int>& Positive);
+  int GetMaxDigits(const std::vector<int> &arr);
+  void SplitPosNeg(const std::vector<int> &Arr, std::vector<int> &Negative, std::vector<int> &Positive);
   void RadixMergeBucketHelpingFunction(std::vector<int> &Part, int Digit);
   void SliyanieHelp(std::vector<std::vector<int>> &Received, std::vector<int> &Indexes, std::vector<int> &Out, int &i);
   void Sliyanie(std::vector<std::vector<int>> &Received, std::vector<int> &Out);

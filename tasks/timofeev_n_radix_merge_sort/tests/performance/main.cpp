@@ -48,9 +48,8 @@ TEST_P(RadixMergeRunPerfTestProcesses, RunPerfModes) {
   ExecuteTest(GetParam());
 }
 
-const auto kAllPerfTasks =
-    ppc::util::MakeAllPerfTasks<InType, TimofeevNRadixMergeMPI, TimofeevNRadixMergeSEQ>(
-        PPC_SETTINGS_timofeev_n_radix_merge_sort);
+const auto kAllPerfTasks = ppc::util::MakeAllPerfTasks<InType, TimofeevNRadixMergeMPI, TimofeevNRadixMergeSEQ>(
+    PPC_SETTINGS_timofeev_n_radix_merge_sort);
 
 const auto kGtestValues = ppc::util::TupleToGTestValues(kAllPerfTasks);
 
