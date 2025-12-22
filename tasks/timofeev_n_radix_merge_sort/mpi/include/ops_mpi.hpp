@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cstddef>
 #include <vector>
 
@@ -21,14 +22,15 @@ class TimofeevNRadixMergeMPI : public BaseTask {
   bool RunImpl() override;
   bool PostProcessingImpl() override;
   void RadixMergeSort(std::vector<int> &part);
-  int GetDigit(int num, int digit);
-  int GetMaxDigits(const std::vector<int> &arr);
-  void SplitPosNeg(const std::vector<int> &Arr, std::vector<int> &Negative, std::vector<int> &Positive);
-  void RadixMergeBucketHelpingFunction(std::vector<int> &Part, int Digit);
-  void SliyanieHelp(std::vector<std::vector<int>> &Received, std::vector<int> &Indexes, std::vector<int> &Out, int &i);
-  void Sliyanie(std::vector<std::vector<int>> &Received, std::vector<int> &Out);
-  void HandleTwoProcesses(std::vector<int> &In, std::vector<int> &Out);
-  bool HandleZeroRank(std::vector<int> &In, std::vector<int> &Out, int &size);
+  static int GetDigit(int num, int digit);
+  static int GetMaxDigits(const std::vector<int> &arr);
+  static void SplitPosNeg(const std::vector<int> &arr, std::vector<int> &negative, std::vector<int> &positive);
+  void RadixMergeBucketHelpingFunction(std::vector<int> &part, int digit);
+  static void SliyanieHelp(std::vector<std::vector<int>> &received, std::vector<int> &indexes, std::vector<int> &out,
+                           int &i);
+  void Sliyanie(std::vector<std::vector<int>> &received, std::vector<int> &out);
+  void HandleTwoProcesses(std::vector<int> &in, std::vector<int> &out);
+  bool HandleZeroRank(std::vector<int> &in, std::vector<int> &out, int &size);
 };
 
 }  // namespace timofeev_n_radix_merge_sort

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cstddef>
 #include <vector>
 
@@ -22,10 +23,10 @@ class TimofeevNRadixMergeSEQ : public BaseTask {
   bool PostProcessingImpl() override;
 
   void RadixMergeSort(std::vector<int> &part);
-  int GetDigit(int num, int digit);
-  int GetMaxDigits(const std::vector<int> &arr);
-  void SplitPosNeg(const std::vector<int> &Arr, std::vector<int> &Negative, std::vector<int> &Positive);
-  void RadixMergeBucketHelpingFunction(std::vector<int> &Part, int Digit);
+  static int GetDigit(int num, int digit);
+  static int GetMaxDigits(const std::vector<int> &arr);
+  static void SplitPosNeg(const std::vector<int> &arr, std::vector<int> &negative, std::vector<int> &positive);
+  void RadixMergeBucketHelpingFunction(std::vector<int> &part, int digit);
 };
 
 }  // namespace timofeev_n_radix_merge_sort

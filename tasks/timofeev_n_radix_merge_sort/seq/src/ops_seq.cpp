@@ -1,6 +1,5 @@
 #include "timofeev_n_radix_merge_sort/seq/include/ops_seq.hpp"
 
-#include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <vector>
@@ -24,14 +23,14 @@ bool TimofeevNRadixMergeSEQ::PreProcessingImpl() {
 }
 
 int TimofeevNRadixMergeSEQ::GetDigit(int num, int digit) {
-  int absNum = std::abs(num);
+  int abs_num = std::abs(num);
 
   // потому что без использования возведения в степень (как функции)
   for (int i = 0; i < digit; i++) {
-    absNum /= 10;
+    abs_num /= 10;
   }
 
-  return absNum % 10;
+  return abs_num % 10;
 }
 
 int TimofeevNRadixMergeSEQ::GetMaxDigits(const std::vector<int> &arr) {
@@ -40,88 +39,89 @@ int TimofeevNRadixMergeSEQ::GetMaxDigits(const std::vector<int> &arr) {
   }
 
   // Находим максимальное по модулю число
-  int MaxAbs = 0;
+  int max_abs = 0;
   for (int num : arr) {
-    int AbsNum = std::abs(num);
-    if (AbsNum > MaxAbs) {
-      MaxAbs = AbsNum;
+    int abs_num = std::abs(num);
+    if (abs_num > max_abs) {
+      max_abs = abs_num;
     }
   }
 
   int digits = 0;
-  while (MaxAbs > 0) {
+  while (max_abs > 0) {
     digits++;
-    MaxAbs /= 10;
+    max_abs /= 10;
   }
   return digits == 0 ? 1 : digits;  // минимум 1 разряд
 }
 
-void TimofeevNRadixMergeSEQ::SplitPosNeg(const std::vector<int> &Arr, std::vector<int> &Negative,
-                                         std::vector<int> &Positive) {
-  for (int num : Arr) {
+void TimofeevNRadixMergeSEQ::SplitPosNeg(const std::vector<int> &arr, std::vector<int> &negative,
+                                         std::vector<int> &positive) {
+  for (int num : arr) {
     if (num < 0) {
-      Negative.push_back(-num);
+      negative.push_back(-num);
     } else {
-      Positive.push_back(num);
+      positive.push_back(num);
     }
   }
 }
 
-void TimofeevNRadixMergeSEQ::RadixMergeBucketHelpingFunction(std::vector<int> &Part, int Digit) {
-  std::vector<std::vector<int>> Buckets(10);
-  for (int num : Part) {
-    int d = GetDigit(num, Digit);
-    Buckets[d].push_back(num);
+void TimofeevNRadixMergeSEQ::RadixMergeBucketHelpingFunction(std::vector<int> &part, int digit) {
+  std::vector<std::vector<int>> buckets(10);
+  for (int num : part) {
+    int d = GetDigit(num, digit);
+    buckets[d].push_back(num);
   }
 
   // Собираем числа обратно в вектор
-  Part.clear();
+  part.clear();
   for (int i = 0; i < 10; i++) {
-    for (int num : Buckets[i]) {
-      Part.push_back(num);
+    for (int num : buckets[i]) {
+      part.push_back(num);
     }
   }
 }
 
-void TimofeevNRadixMergeSEQ::RadixMergeSort(std::vector<int> &Part) {
-  if (Part.size() <= 1) {
+void TimofeevNRadixMergeSEQ::RadixMergeSort(std::vector<int> &part) {
+  if (part.size() <= 1) {
     return;
   }
 
   // Разделяем на отрицательные и положительные числа
-  std::vector<int> Negative, Positive;
-  SplitPosNeg(Part, Negative, Positive);
+  std::vector<int> negative;
+  std::vector<int> positive;
+  SplitPosNeg(part, negative, positive);
 
   // Сортируем отрицательные числа (по модулю)
-  if (!Negative.empty()) {
-    int MaxDigitsNeg = GetMaxDigits(Negative);
+  if (!negative.empty()) {
+    int max_digits_neg = GetMaxDigits(negative);
 
-    for (int digit = 0; digit < MaxDigitsNeg; digit++) {
-      RadixMergeBucketHelpingFunction(Negative, digit);
+    for (int digit = 0; digit < max_digits_neg; digit++) {
+      RadixMergeBucketHelpingFunction(negative, digit);
     }
   }
 
   // Сортируем положительные числа
-  if (!Positive.empty()) {
-    int MaxDigitsPos = GetMaxDigits(Positive);
+  if (!positive.empty()) {
+    int max_digits_pos = GetMaxDigits(positive);
 
-    for (int digit = 0; digit < MaxDigitsPos; digit++) {
-      RadixMergeBucketHelpingFunction(Positive, digit);
+    for (int digit = 0; digit < max_digits_pos; digit++) {
+      RadixMergeBucketHelpingFunction(positive, digit);
     }
   }
   // А теперь сливаем всё в один вектор, причём негативные - задом наперёд,
   // позитивные - как было.
   // Вот так.
-  if (!Negative.empty()) {
+  if (!negative.empty()) {
     int j = 0;
-    for (auto i = Negative.rbegin(); i != Negative.rend(); i++) {
-      Part[j] = -*i;
+    for (int &i : std::ranges::reverse_view(negative)) {
+      part[j] = -i;
       j++;
     }
   }
-  if (!Positive.empty()) {
-    for (size_t i = 0; i < Positive.size(); i++) {
-      Part[i + Negative.size()] = Positive[i];
+  if (!positive.empty()) {
+    for (size_t i = 0; i < positive.size(); i++) {
+      part[i + negative.size()] = positive[i];
     }
   }
 }
